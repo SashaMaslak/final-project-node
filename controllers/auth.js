@@ -16,6 +16,7 @@ const avatarsDir = path.join(__dirname, "../", "public", "avatars")
 
 const register = async (req, res) => {
   const { email, password } = req.body
+  console.log(email)
   const user = await User.findOne({ email })
 
   if (user) {
@@ -36,7 +37,7 @@ const register = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationToken}">Click verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>`,
   }
 
   await sendEmail(verifyEmail)
@@ -85,6 +86,7 @@ const login = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   const { verificationToken } = req.params
+  console.log(verificationToken)
 
   const user = await User.findOne({ verificationToken })
 
@@ -117,7 +119,7 @@ const resendVerifyEmail = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${user.verificationToken}">Click verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
   }
 
   await sendEmail(verifyEmail)
