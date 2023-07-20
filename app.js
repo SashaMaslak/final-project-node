@@ -3,7 +3,6 @@ const logger = require("morgan")
 const cors = require("cors")
 
 const authRouter = require("./routes/api/auth")
-// const noticesRouter = require("./routes/api/notices")
 // const petsRouter = require("./routes/api/pets")
 
 const app = express()
@@ -16,7 +15,6 @@ app.use(express.json())
 app.use(express.static("public"))
 
 app.use("/users", authRouter)
-// app.use("/notices", noticesRouter)
 // app.use("/pets", petsRouter)
 
 app.all("*", (req, res) => {
