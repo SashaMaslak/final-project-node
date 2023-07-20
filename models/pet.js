@@ -1,39 +1,46 @@
-// const { Schema, model } = require("mongoose")
+const { Schema, model } = require("mongoose")
+const Joi = require("joi")
 
-// const Joi = require("joi")
+const { handleMongooseError } = require("../helpers")
 
-// const { handleMongooseError } = require("../helpers")
+const petSchema = new Schema(
+  {
+    name: {
+      type: String,
+      minlength: 3,
+      maxlength: 20,
+      required: [true, "Set name of pet"],
+    },
+    avatarURL: { type: String, required: [true, "Set photo for pet"] },
+    owner: { type: Schema.Types.ObjectId, ref: "user", required: true },
+    breed: { type: String, required: [true, "Set breed of pet"] },
+    city: { type: String, required: [true, "Set city of pet"] },
+    gender: {
+      type: String,
+      oneOf: ["female", "male"],
+      required: [true, "Set gender of pet"],
+    },
+    type: {
+      type: String,
+      oneOf: ["yourPet", "sell", "lostFound", "inGoodHands"],
+      required: [true, "Set gender of pet"],
+    },
+    birthday: {
+      type: Date,
+      required: [true, "Set date of pet"],
+    },
+  },
+  { versionKey: false, timestamps: true }
+)
 
-// const contactSchema = new Schema(
-//   {
-//     name: { type: String, required: [true, "Set name for contact"] },
-//     email: { type: String },
-//     phone: { type: String },
-//     favorite: { type: Boolean, default: false },
-//     owner: { type: Schema.Types.ObjectId, ref: "user", required: true },
-//   },
-//   { versionKey: false, timestamps: true }
-// )
+petSchema.post("save", handleMongooseError)
 
-// contactSchema.post("save", handleMongooseError)
+const addPetSchemaPet = Joi.object({})
 
-// const addSchemaContacts = Joi.object({
-//   email: Joi.string().email().required(),
-//   name: Joi.string().required(),
-//   phone: Joi.string().required(),
-//   owner: Joi.string(),
-//   favorite: Joi.boolean(),
-// })
+const schemas = {
+  addSchemaContacts,
+}
 
-// const updateFavoriteSchema = Joi.object({
-//   favorite: Joi.boolean().required(),
-// })
+const Pet = model("contact", petSchema)
 
-// const schemas = {
-//   addSchemaContacts,
-//   updateFavoriteSchema,
-// }
-
-// const Contact = model("contact", contactSchema)
-
-// module.exports = { Contact, schemas }
+module.exports = { Pet, schemas }
