@@ -9,8 +9,6 @@ const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const pswRegexp =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,128})/
 
-const subList = ["starter", "pro", "business"]
-
 const userSchema = new Schema(
   {
     name: { type: String, required: [true, "Set name"] },
@@ -26,10 +24,9 @@ const userSchema = new Schema(
       match: pswRegexp,
       required: [true, "Set password for user"],
     },
-    subscription: {
+    city: {
       type: String,
-      enum: subList,
-      default: "starter",
+      default: "",
     },
     avatarURL: { type: String },
     token: {
