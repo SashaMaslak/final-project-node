@@ -151,12 +151,10 @@ const updateSubscription = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user
-  const { path: tmpUpload, originalname } = req.file
-  const avatarURL = req.file.path
-
+  const { path: avatar, originalname } = req.file
   const result = await User.findByIdAndUpdate(
     _id,
-    { avatarURL },
+    { avatar },
     {
       new: true,
     }
