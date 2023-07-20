@@ -26,8 +26,8 @@ router.patch(
 
 router.patch(
   "/avatars",
-  uploadFile.single("avatarURL"),
   authenticate,
+  upload.single("avatar"),
   ctrl.updateAvatar
 )
 

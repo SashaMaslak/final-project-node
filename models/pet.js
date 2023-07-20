@@ -1,39 +1,98 @@
-// const { Schema, model } = require("mongoose")
+const { Schema, model } = require("mongoose")
+const Joi = require("joi")
 
-// const Joi = require("joi")
+const { handleMongooseError } = require("../helpers")
+const {
+  petCategories,
+  petSexes,
+  dateRegex,
+  onlyLettersRegex,
+  cityRegex,
+} = require("../constants")
 
-// const { handleMongooseError } = require("../helpers")
+const petSchema = new Schema(
+  {
+    category: {
+      type: String,
+      enum: Object.values(petCategories),
+      required: [true, "Set a category for the pet"],
+    },
+    name: {
+      type: String,
+      minlength: 2,
+      maxlength: 16,
+      match: onlyLettersRegex,
+      required: [true, "Set a name for the pet"],
+    },
+    date: {
+      type: String,
+      match: dateRegex,
+      required: function () {
+        return (
+          this.category === petCategories.SELL ||
+          this.category === petCategories.FORFREE
+        )
+      },
+    },
+    type: {
+      type: String,
+      minlength: 2,
+      maxlength: 16,
+      match: onlyLettersRegex,
+      required: [true, "Set a name for the pet"],
+    },
+    file: {
+      type: String,
+      required: [true, "Set a photo for the pet"],
+    },
+    sex: {
+      type: String,
+      enum: Object.values(petSexes),
+      required: function () {
+        return (
+          this.category === petCategories.SELL ||
+          this.category === petCategories.LOSTFOUND ||
+          this.category === petCategories.FORFREE
+        )
+      },
+    },
+    location: {
+      type: String,
+      match: cityRegex,
+      required: function () {
+        return (
+          this.category === petCategories.SELL ||
+          this.category === petCategories.LOSTFOUND ||
+          this.category === petCategories.FORFREE
+        )
+      },
+    },
+    price: {
+      type: Number,
+      min: 1,
+    },
+    comments: {
+      type: String,
+      maxlength: 120,
+      default: "",
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+  },
+  { versionKey: false, timestamps: true }
+)
 
-// const contactSchema = new Schema(
-//   {
-//     name: { type: String, required: [true, "Set name for contact"] },
-//     email: { type: String },
-//     phone: { type: String },
-//     favorite: { type: Boolean, default: false },
-//     owner: { type: Schema.Types.ObjectId, ref: "user", required: true },
-//   },
-//   { versionKey: false, timestamps: true }
-// )
+petSchema.post("save", handleMongooseError)
 
-// contactSchema.post("save", handleMongooseError)
+const addPetSchemaPet = Joi.object({})
 
-// const addSchemaContacts = Joi.object({
-//   email: Joi.string().email().required(),
-//   name: Joi.string().required(),
-//   phone: Joi.string().required(),
-//   owner: Joi.string(),
-//   favorite: Joi.boolean(),
-// })
+const schemas = {
+  addSchemaContacts,
+}
 
-// const updateFavoriteSchema = Joi.object({
-//   favorite: Joi.boolean().required(),
-// })
+const Pet = model("pet", petSchema)
 
-// const schemas = {
-//   addSchemaContacts,
-//   updateFavoriteSchema,
-// }
-
-// const Contact = model("contact", contactSchema)
-
-// module.exports = { Contact, schemas }
+module.exports = { Pet, schemas }
