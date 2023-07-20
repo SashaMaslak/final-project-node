@@ -72,7 +72,7 @@ const loginSchema = Joi.object({
 const schemas = {
   registerSchema,
   loginSchema,
-  ///updateSubSchema,
+  //updateSubSchema,
   emailSchema,
 }
 
