@@ -3,12 +3,7 @@ const { Schema, model } = require("mongoose")
 const Joi = require("joi")
 
 const { handleMongooseError } = require("../helpers")
-const { dateRegex } = require("../constants")
-
-const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-
-const pswRegexp =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,128})/
+const { dateRegex, emailRegexp, pswRegexp } = require("../constants")
 
 const userSchema = new Schema(
   {

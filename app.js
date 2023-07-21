@@ -3,8 +3,7 @@ const logger = require("morgan")
 const cors = require("cors")
 
 const authRouter = require("./routes/api/auth")
-// const petsRouter = require("./routes/api/pets")
-// const noticesRouter = require("./routes/api/notices")
+const noticesRouter = require("./routes/api/notices")
 
 const app = express()
 
@@ -16,8 +15,8 @@ app.use(express.json())
 app.use(express.static("public"))
 
 app.use("/users", authRouter)
-// app.use("/pets", petsRouter)
-// app.use("/notices", noticesRouter)
+
+app.use("/notices", noticesRouter)
 
 app.all("*", (req, res) => {
   res.status(404).json({ message: "Not found" })
