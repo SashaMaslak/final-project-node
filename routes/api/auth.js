@@ -20,8 +20,8 @@ router.get("/current", authenticate, ctrl.getCurrent)
 router.patch(
   "/",
   authenticate,
-  validateBody(schemas.updateSubSchema),
-  ctrl.updateSubscription
+  //validateBody(schemas.updateSubSchema),
+  ctrl.updateUser
 )
 
 router.patch(

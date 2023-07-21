@@ -138,7 +138,7 @@ const getCurrent = async (req, res) => {
   res.json({ email, name })
 }
 
-const updateSubscription = async (req, res) => {
+const updateUser = async (req, res) => {
   const { _id } = req.user
   const result = await User.findByIdAndUpdate(_id, req.body, {
     new: true,
@@ -172,7 +172,7 @@ module.exports = {
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   getCurrent: ctrlWrapper(getCurrent),
-  updateSubscription: ctrlWrapper(updateSubscription),
+  updateUser: ctrlWrapper(updateUser),
   updateAvatar: ctrlWrapper(updateAvatar),
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
 }

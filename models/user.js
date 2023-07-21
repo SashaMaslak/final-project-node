@@ -37,6 +37,10 @@ const userSchema = new Schema(
       type: String,
       match: dateRegex,
     },
+    favorites: {
+      type: Array,
+      ref: "pet",
+    },
     avatar: { type: String },
     token: {
       type: String,
