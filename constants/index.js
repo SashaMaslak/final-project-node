@@ -8,4 +8,6 @@ module.exports = {
   dateRegex,
   onlyLettersRegex,
   cityRegex,
+  emailRegexp,
+  pswRegexp,
 }
