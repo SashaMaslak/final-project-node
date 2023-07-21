@@ -33,12 +33,10 @@ const register = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `Hello ${user.name}
-You registered an account on YourPet, before being able to use your account you need to verify that this is your email address by clicking here: <a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>
-Kind Regards, YourPet`,
+    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/$//{verificationToken}">Click verify email</a>`,
   }
 
-  await sendEmail(verifyEmail)
+  //await sendEmail(verifyEmail)
 
   res.status(201).json({
     user: {
