@@ -1,9 +1,7 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const gravatar = require("gravatar")
-const Jimp = require("jimp")
 const path = require("path")
-const fs = require("fs").promises
 const { nanoid } = require("nanoid")
 require("dotenv").config()
 
@@ -22,20 +20,22 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10)
-  const avatarURL = gravatar.url(email)
+  const avatar = gravatar.url(email)
   const verificationToken = nanoid()
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatarURL,
+    avatar,
     verificationToken,
   })
 
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>`,
+    html: `Hello ${user.name}
+You registered an account on YourPet, before being able to use your account you need to verify that this is your email address by clicking here: <a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>
+Kind Regards, YourPet`,
   }
 
   await sendEmail(verifyEmail)
@@ -151,7 +151,7 @@ const updateSubscription = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user
-  const { path: avatar, originalname } = req.file
+  const { path: avatar } = req.file
   const result = await User.findByIdAndUpdate(
     _id,
     { avatar },
@@ -163,7 +163,7 @@ const updateAvatar = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Not found")
   }
-  res.json({ avatarURL })
+  res.json({ avatar })
 }
 
 module.exports = {

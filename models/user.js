@@ -28,7 +28,14 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
-    avatarURL: { type: String },
+    phone: {
+      type: String,
+      default: "",
+    },
+    birthday: {
+      type: Date,
+    },
+    avatar: { type: String },
     token: {
       type: String,
       default: "",
