@@ -2,6 +2,7 @@ const { Schema, model } = require("mongoose")
 const Joi = require("joi")
 
 const { handleMongooseError } = require("../helpers")
+const { User } = require("./user")
 const {
   noticeCategories,
   noticeSexes,
@@ -16,6 +17,12 @@ const noticeSchema = new Schema(
       type: String,
       enum: Object.values(noticeCategories),
       required: [true, "Set a category for the pet"],
+    },
+    title: {
+      type: String,
+      minlength: 4,
+      maxlength: 32,
+      required: [true, "Set a title for the pet"],
     },
     name: {
       type: String,
@@ -86,17 +93,34 @@ const noticeSchema = new Schema(
 )
 
 noticeSchema.post("save", handleMongooseError)
+noticeSchema.pre("remove", async function (next) {
+  try {
+    /**
+     * Видаляє усі посилання на notice
+     * у масивах favorites та myPets
+     */
+    await User.updateMany(
+      { favorites: this._id },
+      { $pull: { parentsIdArray: this._id } }
+    )
+
+    next()
+  } catch (err) {
+    next(err)
+  }
+})
 
 const addNoticeSchema = Joi.object({
-  category,
-  name,
-  date,
-  type,
-  file,
-  sex,
-  location,
-  price,
-  comments,
+  //   category,
+  //   title,
+  //   name,
+  //   date,
+  //   type,
+  //   file,
+  //   sex,
+  //   location,
+  //   price,
+  //   comments,
 })
 
 const schemas = {
