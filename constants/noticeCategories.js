@@ -1,8 +1,8 @@
-const petCategories = Object.freeze({
+const noticeCategories = Object.freeze({
   SELL: "sell",
   LOSTFOUND: "lost-found",
   FORFREE: "for-free",
   MYPET: "my-pet",
 })
 
-module.exports = petCategories
+module.exports = noticeCategories
