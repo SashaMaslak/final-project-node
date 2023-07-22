@@ -209,7 +209,7 @@ const updateUser = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Not found")
   }
-  //res.json(result)
+  res.json(result)
 }
 
 const updateAvatar = async (req, res) => {
