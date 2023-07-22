@@ -205,19 +205,7 @@ const toggleNoticeFavorite = async (req, res) => {
   const { _id, favorites } = req.user
   const { noticeId } = req.params
   const isInFavorites = favorites.some(itemId => noticeId === itemId.toString())
-
-  let action
-  switch (isInFavorites) {
-    case false:
-      action = "$push"
-      break
-    case true:
-      action = "$pull"
-      break
-    default:
-      action = null
-  }
-
+  const action = isInFavorites ? "$pull" : "$push"
   const newUser = await User.findByIdAndUpdate(
     _id,
     {
@@ -225,7 +213,6 @@ const toggleNoticeFavorite = async (req, res) => {
     },
     { new: true }
   )
-
   res.json({ favorites: newUser.favorites })
 }
 

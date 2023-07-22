@@ -1,7 +1,7 @@
-const { Schema, model } = require("mongoose")
+const { Schema, model, Types } = require("mongoose")
 const Joi = require("joi")
 
-const { handleMongooseError } = require("../helpers")
+const { handleMongooseError, HttpError } = require("../helpers")
 const { User } = require("./user")
 const {
   noticeCategories,
@@ -91,21 +91,6 @@ const noticeSchema = new Schema(
 )
 
 noticeSchema.post("save", handleMongooseError)
-noticeSchema.pre("remove", async function (next) {
-  try {
-    // Видаляє усі посилання на notice
-    // у масивах favorites та myPets
-
-    await User.updateMany(
-      { favorites: this._id },
-      { $pull: { parentsIdArray: this._id } }
-    )
-
-    next()
-  } catch (err) {
-    next(err)
-  }
-})
 
 /**
  * Схеми Joi (addNoticeSchema)
