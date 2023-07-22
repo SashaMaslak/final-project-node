@@ -36,13 +36,8 @@ const register = async (req, res) => {
   }
 
   await sendEmail(verifyEmail)
-  console.log("newUser--->", newUser)
-  res.status(201).json({
-    user: {
-      name: newUser.name,
-      email: newUser.email,
-    },
-  })
+
+  res.status(201).json(newUser)
 }
 
 const login = async (req, res) => {
