@@ -23,8 +23,10 @@ const storage = new CloudinaryStorage({
     switch (file.fieldname) {
       case "avatar":
         folder = "avatars"
+        break
       case "documents":
         folder = "documents"
+        break
       default:
         folder = "misc"
     }
