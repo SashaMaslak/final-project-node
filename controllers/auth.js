@@ -38,21 +38,10 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail)
 
-  const payload = {
-    id: user._id,
-  }
-
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
-  await User.findByIdAndUpdate(user._id, { token })
-
-  console.log("user-->", user)
   res.json({
-    token,
     user: {
-      id: user._id,
       name: user.name,
       email: user.email,
-      city: user.city,
     },
   })
 }
@@ -85,7 +74,6 @@ const login = async (req, res) => {
     user: {
       name: user.name,
       email: user.email,
-      subscription: user.subscription,
     },
   })
 }
