@@ -80,7 +80,7 @@ const noticeSchema = new Schema(
     },
     comments: {
       type: String,
-      maxlength: 120,
+      maxlength: 140,
       default: "",
     },
     owner: {
@@ -111,16 +111,20 @@ noticeSchema.pre("remove", async function (next) {
 })
 
 const addNoticeSchema = Joi.object({
-  //   category,
-  //   title,
-  //   name,
-  //   date,
-  //   type,
-  //   file,
-  //   sex,
-  //   location,
-  //   price,
-  //   comments,
+  category: Joi.string()
+    .valid(...Object.values(noticeCategories))
+    .required(),
+  title: Joi.string().min(3).max(32).required(),
+  name: Joi.string().min(2).max(16).required(),
+  date: Joi.string().pattern(dateRegex).required(),
+  type: Joi.string().min(2).max(16).pattern(onlyLettersRegex).required(),
+  file: Joi.string().required(),
+  sex: Joi.string()
+    .valid(...Object.values(noticeSexes))
+    .required(),
+  location: Joi.string().pattern(cityRegex).required(),
+  price: Joi.number().min(1).required(),
+  comments: Joi.string().max(140),
 })
 
 const schemas = {
