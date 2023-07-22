@@ -36,8 +36,17 @@ const storage = new CloudinaryStorage({
   },
 })
 
+const multerFilter = (_, file, callback) => {
+  if (file.mimetype.includes("image/")) {
+    callback(null, true)
+  } else {
+    callback(HttpError(400, "Please, upload images only!"), false)
+  }
+}
+
 const uploadFile = multer({
   storage,
+  fileFilter: multerFilter,
   limits: {
     fileSize: imageFileLimit,
   },
