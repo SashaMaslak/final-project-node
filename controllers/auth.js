@@ -13,35 +13,34 @@ const { SECRET_KEY, BASE_URL } = process.env
 const register = async (req, res) => {
   const { email, password } = req.body
   const user = await User.findOne({ email })
+
   if (user) {
     throw HttpError(409, "Email already in use")
   }
 
   const hashPassword = await bcrypt.hash(password, 10)
-  const avatar = gravatar.url(email)
+  const avatarURL = gravatar.url(email)
   const verificationToken = nanoid()
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatar,
+    avatarURL,
     verificationToken,
   })
-
-  console.log("newUser-->", newUser)
 
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationToken}">Click verify email</a>`,
   }
 
   await sendEmail(verifyEmail)
 
-  res.json({
+  res.status(201).json({
     user: {
-      name: user.name,
-      email: user.email,
+      name: newUser.name,
+      email: newUser.email,
     },
   })
 }
