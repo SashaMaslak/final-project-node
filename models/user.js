@@ -32,11 +32,7 @@ const userSchema = new Schema(
       type: String,
       match: dateRegex,
     },
-    favorites: {
-      type: [String],
-      ref: "notice",
-      default: [],
-    },
+    favorites: [{ type: Schema.Types.ObjectId, ref: "notice" }],
     ownPets: {
       type: [String],
       ref: "notice",
