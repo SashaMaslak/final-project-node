@@ -39,7 +39,7 @@ const register = async (req, res) => {
   await sendEmail(verifyEmail)
 
   const payload = {
-    //id: newUser._id,
+    id: newUser._id,
   }
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
