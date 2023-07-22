@@ -81,8 +81,7 @@ const verifyEmail = async (req, res) => {
   if (!user) {
     HttpError(404, "User not found")
   }
-  if (user.verificationToken) {
-    console.log("404--->", 404)
+  if (!user.verificationToken) {
     HttpError(404)
   }
 
