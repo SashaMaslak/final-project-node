@@ -156,6 +156,12 @@ const getCurrent = async (req, res) => {
   res.json({ email, name })
 }
 
+const getUserIdFromToken = authorizationHeader => {
+  const token = authorizationHeader.split(" ")[1]
+  const decodedToken = jwt.verify(token, SECRET_KEY)
+  return decodedToken.id
+}
+
 const refreshToken = async (req, res) => {
   const authorizationHeader = req.headers.authorization
 

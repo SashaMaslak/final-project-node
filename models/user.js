@@ -29,15 +29,10 @@ const userSchema = new Schema(
       default: "",
     },
     birthday: {
-      type: String,
-      match: dateRegex,
+      type: Date,
     },
     favorites: [{ type: Schema.Types.ObjectId, ref: "notice" }],
-    ownPets: {
-      type: [String],
-      ref: "notice",
-      default: [],
-    },
+    ownPets: [{ type: Schema.Types.ObjectId, ref: "notice" }],
     avatar: { type: String },
     token: {
       type: String,
