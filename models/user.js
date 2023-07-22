@@ -17,6 +17,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       minlength: 6,
+      maxlength: 16,
       match: pswRegexp,
       required: [true, "Set password for user"],
     },

@@ -32,7 +32,7 @@ const register = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL}/verify/${verificationToken}">HELLO my friend, Click for verify your email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">HELLO my friend, Click for verify your email</a>`,
   }
 
   await sendEmail(verifyEmail)
@@ -74,14 +74,13 @@ const login = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   const { verificationToken } = req.params
-  console.log(verificationToken)
 
   const user = await User.findOne({ verificationToken })
 
   if (!user) {
     HttpError(404, "User not found")
   }
-  if (!user.verificationToken) {
+  if (user.verificationToken) {
     HttpError(404)
   }
 
