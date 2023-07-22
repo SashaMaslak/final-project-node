@@ -12,3 +12,22 @@
     "favorites": []
   }
 ]
+
+
+const verifyEmail = async (req, res) => {
+  const { verificationToken } = req.params
+  const user = await User.findOne({ verificationToken })
+
+  if (!user) {
+    HttpError(404, "User not found")
+  }
+  if (user.verificationToken) {
+    HttpError(404)
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: "",
+  })
+  res.status(200).json({ message: "Verification successful" })
+}
