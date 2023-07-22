@@ -95,7 +95,7 @@ const login = async (req, res) => {
       phone: user.phone,
       favorites: user.favorites,
       ownPets: user.ownPets,
-      // avatar: user.avatar,
+      avatar: user.avatar,
     },
   })
 }
