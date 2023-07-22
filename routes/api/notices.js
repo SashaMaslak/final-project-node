@@ -1,14 +1,26 @@
 const express = require("express")
+const ctrl = require("../../controllers/notices")
+const { schemas } = require("../../models/notice")
+const {
+  validateBody,
+  isValidId,
+  authenticate,
+  uploadFile,
+} = require("../../middlewares")
+
 const router = express.Router()
 
-const ctrl = require("../../controllers/notices")
-const { validateBody, isValidId, authenticate } = require("../../middlewares")
-const { schemas } = require("../../models/notice")
-
 // router.get("/", authenticate, ctrl.getAll)
+
 // router.get("/:noticeId", authenticate, isValidId, ctrl.getById)
 
-router.post("/", authenticate, validateBody(schemas.addNoticeSchema), ctrl.add)
+router.post(
+  "/",
+  authenticate,
+  uploadFile.single("avatar"),
+  validateBody(schemas.addNoticeSchema),
+  ctrl.add
+)
 
 // router.put(
 //   "/:noticeId",

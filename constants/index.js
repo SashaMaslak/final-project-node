@@ -16,4 +16,5 @@ module.exports = {
   cityRegex,
   emailRegexp,
   pswRegexp,
+  imageFileLimit: 3 * 1024 * 1024,
 }

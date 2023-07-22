@@ -1,13 +1,15 @@
 const multer = require("multer")
 const cloudinary = require("cloudinary").v2
 const { CloudinaryStorage } = require("multer-storage-cloudinary")
+const { nanoid } = require("nanoid")
+
+const { imageFileLimit } = require("../constants")
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env
 
 /**
  * Файли будуть завантажені одразу після отримання мультером
  */
-
-const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
-  process.env
 
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -18,23 +20,14 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    let folder
-
-    switch (file.fieldname) {
-      case "avatar":
-        folder = "avatars"
-        break
-      case "documents":
-        folder = "documents"
-        break
-      default:
-        folder = "misc"
+    if (file.fieldname !== "avatar") {
+      return null
     }
 
     return {
-      folder,
+      folder: "avatars",
       allowed_formats: ["jpg", "png"],
-      public_id: req.user._id,
+      public_id: nanoid(),
       transformation: [
         { width: 350, height: 350 },
         { width: 700, height: 700 },
@@ -46,7 +39,8 @@ const storage = new CloudinaryStorage({
 const uploadFile = multer({
   storage,
   limits: {
-    fileSize: 3 * 1024 * 1024,
+    fileSize: imageFileLimit,
   },
 })
+
 module.exports = uploadFile
