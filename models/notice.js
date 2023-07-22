@@ -34,12 +34,7 @@ const noticeSchema = new Schema(
     date: {
       type: String,
       match: dateRegex,
-      required: function () {
-        return (
-          this.category === noticeCategories.SELL ||
-          this.category === noticeCategories.FORFREE
-        )
-      },
+      required: [true, "Set a date for the pet"],
     },
     type: {
       type: String,
@@ -77,6 +72,9 @@ const noticeSchema = new Schema(
     price: {
       type: Number,
       min: 1,
+      required: function () {
+        return this.category === noticeCategories.SELL
+      },
     },
     comments: {
       type: String,
@@ -95,10 +93,9 @@ const noticeSchema = new Schema(
 noticeSchema.post("save", handleMongooseError)
 noticeSchema.pre("remove", async function (next) {
   try {
-    /**
-     * Видаляє усі посилання на notice
-     * у масивах favorites та myPets
-     */
+    // Видаляє усі посилання на notice
+    // у масивах favorites та myPets
+
     await User.updateMany(
       { favorites: this._id },
       { $pull: { parentsIdArray: this._id } }
@@ -110,6 +107,9 @@ noticeSchema.pre("remove", async function (next) {
   }
 })
 
+/**
+ * Схеми Joi (addNoticeSchema)
+ */
 const addNoticeSchema = Joi.object({
   category: Joi.string()
     .valid(...Object.values(noticeCategories))
@@ -121,9 +121,30 @@ const addNoticeSchema = Joi.object({
   file: Joi.string().required(),
   sex: Joi.string()
     .valid(...Object.values(noticeSexes))
-    .required(),
-  location: Joi.string().pattern(cityRegex).required(),
-  price: Joi.number().min(1).required(),
+    .when("category", {
+      is: Joi.valid(
+        noticeCategories.SELL,
+        noticeCategories.LOSTFOUND,
+        noticeCategories.FORFREE
+      ),
+      then: Joi.required(),
+    }),
+  location: Joi.string()
+    .pattern(cityRegex)
+    .when("category", {
+      is: Joi.valid(
+        noticeCategories.SELL,
+        noticeCategories.LOSTFOUND,
+        noticeCategories.FORFREE
+      ),
+      then: Joi.required(),
+    }),
+  price: Joi.number()
+    .min(1)
+    .when("category", {
+      is: Joi.valid(noticeCategories.SELL),
+      then: Joi.required(),
+    }),
   comments: Joi.string().max(140),
 })
 
