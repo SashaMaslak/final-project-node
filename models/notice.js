@@ -103,7 +103,6 @@ const addNoticeSchema = Joi.object({
   name: Joi.string().min(2).max(16).required(),
   date: Joi.string().pattern(dateRegex).required(),
   type: Joi.string().min(2).max(16).pattern(onlyLettersRegex).required(),
-  file: Joi.string().required(),
   sex: Joi.string()
     .valid(...Object.values(noticeSexes))
     .when("category", {

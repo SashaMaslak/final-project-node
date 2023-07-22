@@ -4,8 +4,13 @@ const { User } = require("../models/user")
 const { ctrlWrapper, HttpError } = require("../helpers")
 
 const add = async (req, res) => {
+  console.log(req.body)
+  if (!req.file) {
+    throw HttpError(400, "Missed required avatar form-data field")
+  }
   const { _id: owner } = req.user
-  const result = await Notice.create({ ...req.body, owner })
+  const { path: file } = req.file
+  const result = await Notice.create({ ...req.body, file, owner })
   res.status(201).json(result)
 }
 
