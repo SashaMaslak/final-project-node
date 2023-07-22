@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "",
+    "name": "",
+    "email": "",
+    "city": "",
+    "phone": "",
+    "birthday": "",
+    "avatar": "",
+    "token": "",
+    "ownPets": [],
+    "favorites": []
+  }
+]

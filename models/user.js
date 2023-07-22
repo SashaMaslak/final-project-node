@@ -71,16 +71,15 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 })
 
-// const updateSubSchema = Joi.object({
-//   subscription: Joi.string()
-//     .valid(...subList)
-//     .required(),
-// })
+const updateSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().pattern(emailRegexp).required(),
+})
 
 const schemas = {
   registerSchema,
   loginSchema,
-  //updateSubSchema,
+  updateSchema,
   emailSchema,
 }
 

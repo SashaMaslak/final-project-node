@@ -10,8 +10,6 @@ const { ctrlWrapper, HttpError, sendEmail } = require("../helpers/index.js")
 
 const { SECRET_KEY, BASE_URL } = process.env
 
-const avatarsDir = path.join(__dirname, "../", "public", "avatars")
-
 const register = async (req, res) => {
   const { email, password } = req.body
   const user = await User.findOne({ email })
@@ -30,6 +28,8 @@ const register = async (req, res) => {
     verificationToken,
   })
 
+  console.log("newUser-->", newUser)
+
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
@@ -38,11 +38,21 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail)
 
-  res.status(201).json({
+  const payload = {
+    id: user._id,
+  }
+
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
+  await User.findByIdAndUpdate(user._id, { token })
+
+  console.log("user-->", user)
+  res.json({
+    token,
     user: {
-      name: newUser.name,
-      email: newUser.email,
-      subscription: newUser.subscription,
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      city: user.city,
     },
   })
 }
@@ -136,6 +146,45 @@ const getCurrent = async (req, res) => {
   res.json({ email, name })
 }
 
+const refreshToken = async (req, res) => {
+  const authorizationHeader = req.headers.authorization
+
+  if (!authorizationHeader) {
+    return res.status(401).json({ error: "Authorization header missing" })
+  }
+
+  try {
+    const userId = getUserIdFromToken(authorizationHeader)
+    const user = await User.findOne({ _id: userId })
+    if (!user) {
+      return res.status(401).json({ error: "Invalid token" })
+    }
+
+    const payload = {
+      id: user._id,
+    }
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
+    await User.findByIdAndUpdate(user._id, { token })
+
+    return res.json({
+      token,
+      user: {
+        email: user.email,
+        subscription: user.subscription,
+        avatar: user.avatarURL,
+        name: user.name,
+        surname: user.surname,
+        phone: user.phone,
+        country: user.country,
+      },
+    })
+  } catch (error) {
+    return error.message === "jwt expired"
+      ? res.status(400).json({ error: "Invalid Token" })
+      : res.status(500).json({ error: "Server error" })
+  }
+}
+
 const updateUser = async (req, res) => {
   const { _id } = req.user
   const result = await User.findByIdAndUpdate(_id, req.body, {
@@ -170,6 +219,7 @@ module.exports = {
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   getCurrent: ctrlWrapper(getCurrent),
+  refreshToken: ctrlWrapper(refreshToken),
   updateUser: ctrlWrapper(updateUser),
   updateAvatar: ctrlWrapper(updateAvatar),
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
