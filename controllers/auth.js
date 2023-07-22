@@ -27,6 +27,7 @@ const register = async (req, res) => {
     password: hashPassword,
     avatar,
     verificationToken,
+    verify: true,
   })
 
   const verifyEmail = {
@@ -37,7 +38,28 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail)
 
-  res.status(201).json(newUser)
+  const payload = {
+    id: newUser._id,
+  }
+
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
+  await User.findByIdAndUpdate(newUser._id, { token })
+
+  res.status(201).json(
+    res.status(201).json({
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        city: newUser.city,
+        phone: newUser.phone,
+        favorites: newUser.favorites,
+        ownPets: newUser.ownPets,
+        avatar: newUser.avatar,
+      },
+    })
+  )
 }
 
 const login = async (req, res) => {
