@@ -33,8 +33,14 @@ const userSchema = new Schema(
       match: dateRegex,
     },
     favorites: {
-      type: Array,
-      ref: "pet",
+      type: [String],
+      ref: "notice",
+      default: [],
+    },
+    ownPets: {
+      type: [String],
+      ref: "notice",
+      default: [],
     },
     avatar: { type: String },
     token: {
