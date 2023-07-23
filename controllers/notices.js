@@ -1,5 +1,6 @@
 const { Notice } = require("../models/notice")
 const { User } = require("../models/user")
+const { Types } = require("mongoose")
 const moment = require("moment")
 
 const { ctrlWrapper, HttpError, objForSearch } = require("../helpers")
@@ -24,6 +25,7 @@ const getByOwner = async (req, res) => {
   const { _id: owner } = req.user
   const result = await Notice.find({ owner })
   console.log(result)
+
   res.json(result)
 }
 

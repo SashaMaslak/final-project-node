@@ -4,7 +4,6 @@ const gravatar = require("gravatar")
 const path = require("path")
 const { nanoid } = require("nanoid")
 require("dotenv").config()
-const { Types } = require("mongoose")
 
 const { User } = require("../models/user.js")
 const { ctrlWrapper, HttpError, sendEmail } = require("../helpers/index.js")
