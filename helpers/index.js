@@ -4,6 +4,7 @@ const handleMongooseError = require("./handleMongooseError")
 const sendEmail = require("./sendEmail")
 const isOneOf = require("./isOneOf")
 const objForSearch = require("./objForSearch")
+const transformNotice = require("./transformNotice")
 
 module.exports = {
   HttpError,
@@ -12,4 +13,5 @@ module.exports = {
   sendEmail,
   isOneOf,
   objForSearch,
+  transformNotice,
 }

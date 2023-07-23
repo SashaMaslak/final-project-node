@@ -13,6 +13,8 @@ const router = express.Router()
 
 router.get("/", validateParams(schemas.paramsNoticeSchema), ctrl.getAll)
 
+router.get("/favorite", authenticate, ctrl.getFavorites)
+
 router.get("/owner", authenticate, ctrl.getByOwner)
 
 router.get("/:noticeId", isValidId, ctrl.getById)
@@ -26,8 +28,6 @@ router.post(
 )
 
 router.delete("/:noticeId", authenticate, isValidId, ctrl.deleteById)
-
-router.get("/favorite", authenticate, ctrl.getFavorites)
 
 router.post("/:noticeId/favorite", authenticate, ctrl.toggleNoticeFavorite)
 

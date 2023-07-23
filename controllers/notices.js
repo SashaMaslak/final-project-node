@@ -3,7 +3,12 @@ const { User } = require("../models/user")
 const { Types } = require("mongoose")
 const moment = require("moment")
 
-const { ctrlWrapper, HttpError, objForSearch } = require("../helpers")
+const {
+  ctrlWrapper,
+  HttpError,
+  objForSearch,
+  transformNotice,
+} = require("../helpers")
 const { noticeCategories } = require("../constants")
 
 const getAll = async (req, res) => {
@@ -18,15 +23,19 @@ const getAll = async (req, res) => {
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
   const result = await await Notice.find(findObject, "", { skip, limit })
-  res.json(result)
+  res.json(result.map(transformNotice))
+}
+
+const getFavorites = async (req, res) => {
+  const { _id } = req.user
+  const { favorites } = await User.findById(_id).populate("favorites")
+  res.json({ favorites })
 }
 
 const getByOwner = async (req, res) => {
   const { _id: owner } = req.user
   const result = await Notice.find({ owner })
-  console.log(result)
-
-  res.json(result)
+  res.json(result.map(transformNotice))
 }
 
 const getById = async (req, res) => {
@@ -35,7 +44,7 @@ const getById = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Notice not found")
   }
-  res.json(result)
+  res.json(transformNotice(result))
 }
 
 const add = async (req, res) => {
@@ -48,7 +57,7 @@ const add = async (req, res) => {
   if (result.category === noticeCategories.MYPET) {
     await User.findByIdAndUpdate(owner, { $push: { ownPets: result._id } })
   }
-  res.status(201).json(result)
+  res.status(201).json(transformNotice(result))
 }
 
 const deleteById = async (req, res) => {
@@ -76,11 +85,6 @@ const deleteById = async (req, res) => {
   res.json({ message: "Delete success" })
 }
 
-const getFavorites = async (req, res) => {
-  const { favorites } = req.user
-  res.json({ favorites })
-}
-
 const toggleNoticeFavorite = async (req, res) => {
   const { _id, favorites } = req.user
   const { noticeId } = req.params
@@ -92,16 +96,16 @@ const toggleNoticeFavorite = async (req, res) => {
       [action]: { favorites: new Types.ObjectId(noticeId) },
     },
     { new: true }
-  )
+  ).populate("favorites")
   res.json({ favorites: newUser.favorites })
 }
 
 module.exports = {
   getAll: ctrlWrapper(getAll),
+  getFavorites: ctrlWrapper(getFavorites),
   getByOwner: ctrlWrapper(getByOwner),
   getById: ctrlWrapper(getById),
   add: ctrlWrapper(add),
   deleteById: ctrlWrapper(deleteById),
-  getFavorites: ctrlWrapper(getFavorites),
   toggleNoticeFavorite: ctrlWrapper(toggleNoticeFavorite),
 }
