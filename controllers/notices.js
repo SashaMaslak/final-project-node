@@ -2,15 +2,20 @@ const { Notice } = require("../models/notice")
 const { User } = require("../models/user")
 
 const { ctrlWrapper, HttpError } = require("../helpers")
+const { MYPET } = require("../constants/noticeCategories")
 
 const add = async (req, res) => {
-  console.log(req.body)
   if (!req.file) {
     throw HttpError(400, "Missed required avatar form-data field")
   }
   const { _id: owner } = req.user
   const { path: file } = req.file
   const result = await Notice.create({ ...req.body, file, owner })
+
+  if (result.category === MYPET) {
+    console.log("its MYPET")
+    await User.updateMany({ _id: owner }, { $push: { ownPets: result } })
+  }
   res.status(201).json(result)
 }
 
@@ -23,6 +28,7 @@ const deleteById = async (req, res) => {
   }
 
   await User.updateMany({ favorites: _id }, { $pull: { favorites: _id } })
+  await User.updateMany({ ownPets: _id }, { $pull: { ownPets: _id } })
   await Notice.findByIdAndRemove(noticeId)
 
   res.json({ message: "Delete success" })
