@@ -3,17 +3,17 @@ const dateRegex =
 
 const onlyLettersRegex = /^[A-Za-z\s]+$/
 
-const cityRegex = /^[A-Za-z]+$/
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
-const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-
-const pswRegexp =
+const pswRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,128})/
+
+const phoneRegex = /^\+\d{12}$/
 
 module.exports = {
   dateRegex,
   onlyLettersRegex,
-  cityRegex,
-  emailRegexp,
-  pswRegexp,
+  emailRegex,
+  pswRegex,
+  phoneRegex,
 }

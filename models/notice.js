@@ -8,7 +8,6 @@ const {
   noticeSexes,
   dateRegex,
   onlyLettersRegex,
-  cityRegex,
 } = require("../constants")
 
 const noticeSchema = new Schema(
@@ -60,7 +59,7 @@ const noticeSchema = new Schema(
     },
     location: {
       type: String,
-      match: cityRegex,
+      minlength: 2,
       required: function () {
         return (
           this.category === noticeCategories.SELL ||
@@ -113,16 +112,14 @@ const addNoticeSchema = Joi.object({
       ),
       then: Joi.required(),
     }),
-  location: Joi.string()
-    .pattern(cityRegex)
-    .when("category", {
-      is: Joi.valid(
-        noticeCategories.SELL,
-        noticeCategories.LOSTFOUND,
-        noticeCategories.FORFREE
-      ),
-      then: Joi.required(),
-    }),
+  location: Joi.string().when("category", {
+    is: Joi.valid(
+      noticeCategories.SELL,
+      noticeCategories.LOSTFOUND,
+      noticeCategories.FORFREE
+    ),
+    then: Joi.required(),
+  }),
   price: Joi.number()
     .min(1)
     .when("category", {

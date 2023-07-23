@@ -3,9 +3,9 @@ const noticeSexes = require("./noticeSexes")
 const {
   dateRegex,
   onlyLettersRegex,
-  cityRegex,
-  emailRegexp,
-  pswRegexp,
+  emailRegex,
+  pswRegex,
+  phoneRegex,
 } = require("./regex")
 
 module.exports = {
@@ -13,8 +13,8 @@ module.exports = {
   noticeSexes,
   dateRegex,
   onlyLettersRegex,
-  cityRegex,
-  emailRegexp,
-  pswRegexp,
+  emailRegex,
+  pswRegex,
+  phoneRegex,
   imageFileLimit: 3 * 1024 * 1024,
 }
