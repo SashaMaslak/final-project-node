@@ -1,5 +1,6 @@
 const { Schema, model, Types } = require("mongoose")
 const Joi = require("joi")
+const { format } = require("date-fns")
 
 const { handleMongooseError, HttpError } = require("../helpers")
 const { User } = require("./user")
@@ -8,7 +9,10 @@ const {
   noticeSexes,
   dateRegex,
   onlyLettersRegex,
+  cityRegex,
+  dateFilterOptions,
 } = require("../constants")
+const { SELL, LOSTFOUND, FORFREE, MYPET } = noticeCategories
 
 const noticeSchema = new Schema(
   {
@@ -31,9 +35,11 @@ const noticeSchema = new Schema(
       required: [true, "Set a name for the pet"],
     },
     date: {
-      type: String,
-      match: dateRegex,
-      //required: [true, "Set a date for the pet"],
+      type: Date,
+      required: function () {
+        const isRequired = isOneOf(this.category, SELL, FORFREE, MYPET)
+        return [isRequired, "Set a date for the pet"]
+      },
     },
     type: {
       type: String,
@@ -50,29 +56,24 @@ const noticeSchema = new Schema(
       type: String,
       enum: Object.values(noticeSexes),
       required: function () {
-        return (
-          this.category === noticeCategories.SELL ||
-          this.category === noticeCategories.LOSTFOUND ||
-          this.category === noticeCategories.FORFREE
-        )
+        const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
+        return [isRequired, "Set a sex for the pet"]
       },
     },
     location: {
       type: String,
       minlength: 2,
       required: function () {
-        return (
-          this.category === noticeCategories.SELL ||
-          this.category === noticeCategories.LOSTFOUND ||
-          this.category === noticeCategories.FORFREE
-        )
+        const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
+        return [isRequired, "Set a location for the pet"]
       },
     },
     price: {
       type: Number,
       min: 1,
       required: function () {
-        return this.category === noticeCategories.SELL
+        const isRequired = isOneOf(this.category, SELL)
+        return [isRequired, "Set a price for the pet"]
       },
     },
     comments: {
@@ -90,6 +91,16 @@ const noticeSchema = new Schema(
 )
 
 noticeSchema.post("save", handleMongooseError)
+noticeSchema.post("find", function (notices) {
+  notices.forEach(notice => {
+    notice.date = format(new Date(notice.date), "dd-MM-yyyy")
+  })
+  return notices
+})
+noticeSchema.post("findOne", function (notice) {
+  notice.date = format(new Date(notice.date), "dd-MM-yyyy")
+  return notice
+})
 
 /**
  * Схеми Joi (addNoticeSchema)
@@ -100,37 +111,46 @@ const addNoticeSchema = Joi.object({
     .required(),
   title: Joi.string().min(3).max(32).required(),
   name: Joi.string().min(2).max(16).required(),
-  date: Joi.string().pattern(dateRegex).required(),
+  date: Joi.string()
+    .pattern(dateRegex)
+    .when("category", {
+      is: Joi.valid(SELL, FORFREE, MYPET),
+      then: Joi.required(),
+    }),
   type: Joi.string().min(2).max(16).pattern(onlyLettersRegex).required(),
   sex: Joi.string()
     .valid(...Object.values(noticeSexes))
     .when("category", {
-      is: Joi.valid(
-        noticeCategories.SELL,
-        noticeCategories.LOSTFOUND,
-        noticeCategories.FORFREE
-      ),
+      is: Joi.valid(SELL, LOSTFOUND, FORFREE),
       then: Joi.required(),
     }),
-  location: Joi.string().when("category", {
-    is: Joi.valid(
-      noticeCategories.SELL,
-      noticeCategories.LOSTFOUND,
-      noticeCategories.FORFREE
-    ),
-    then: Joi.required(),
-  }),
+  location: Joi.string()
+    .pattern(cityRegex)
+    .when("category", {
+      is: Joi.valid(SELL, LOSTFOUND, FORFREE),
+      then: Joi.required(),
+    }),
   price: Joi.number()
     .min(1)
     .when("category", {
-      is: Joi.valid(noticeCategories.SELL),
+      is: Joi.valid(SELL),
       then: Joi.required(),
     }),
   comments: Joi.string().max(140),
 })
 
+const paramsNoticeSchema = Joi.object({
+  page: Joi.number().min(0),
+  limit: Joi.number().min(0),
+  category: Joi.string().valid(...Object.values(noticeCategories)),
+  gender: Joi.string().valid(...Object.values(noticeSexes)),
+  date: Joi.string().valid(...Object.values(dateFilterOptions)),
+  query: Joi.string().max(32),
+})
+
 const schemas = {
   addNoticeSchema,
+  paramsNoticeSchema,
 }
 
 const Notice = model("notice", noticeSchema)

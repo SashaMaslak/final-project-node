@@ -229,21 +229,6 @@ const updateAvatar = async (req, res) => {
   res.json({ avatar })
 }
 
-const toggleNoticeFavorite = async (req, res) => {
-  const { _id, favorites } = req.user
-  const { noticeId } = req.params
-  const isInFavorites = favorites.some(itemId => noticeId === itemId.toString())
-  const action = isInFavorites ? "$pull" : "$push"
-  const newUser = await User.findByIdAndUpdate(
-    _id,
-    {
-      [action]: { favorites: new Types.ObjectId(noticeId) },
-    },
-    { new: true }
-  )
-  res.json({ favorites: newUser.favorites })
-}
-
 module.exports = {
   register: ctrlWrapper(register),
   verifyEmail: ctrlWrapper(verifyEmail),
@@ -254,5 +239,4 @@ module.exports = {
   updateUser: ctrlWrapper(updateUser),
   updateAvatar: ctrlWrapper(updateAvatar),
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
-  toggleNoticeFavorite: ctrlWrapper(toggleNoticeFavorite),
 }
