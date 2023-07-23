@@ -1,5 +1,6 @@
 const { Schema, model, Types } = require("mongoose")
 const Joi = require("joi")
+const { format } = require("date-fns")
 
 const { handleMongooseError, HttpError } = require("../helpers")
 const { User } = require("./user")
@@ -9,6 +10,7 @@ const {
   dateRegex,
   onlyLettersRegex,
   cityRegex,
+  dateFilterOptions,
 } = require("../constants")
 const { SELL, LOSTFOUND, FORFREE, MYPET } = noticeCategories
 
@@ -33,8 +35,7 @@ const noticeSchema = new Schema(
       required: [true, "Set a name for the pet"],
     },
     date: {
-      type: String,
-      match: dateRegex,
+      type: Date,
       required: function () {
         const isRequired = isOneOf(this.category, SELL, FORFREE, MYPET)
         return [isRequired, "Set a date for the pet"]
@@ -90,6 +91,16 @@ const noticeSchema = new Schema(
 )
 
 noticeSchema.post("save", handleMongooseError)
+noticeSchema.post("find", function (notices) {
+  notices.forEach(notice => {
+    notice.date = format(new Date(notice.date), "dd-MM-yyyy")
+  })
+  return notices
+})
+noticeSchema.post("findOne", function (notice) {
+  notice.date = format(new Date(notice.date), "dd-MM-yyyy")
+  return notice
+})
 
 /**
  * Схеми Joi (addNoticeSchema)
@@ -128,8 +139,18 @@ const addNoticeSchema = Joi.object({
   comments: Joi.string().max(140),
 })
 
+const paramsNoticeSchema = Joi.object({
+  page: Joi.number().min(0),
+  limit: Joi.number().min(0),
+  category: Joi.string().valid(...Object.values(noticeCategories)),
+  gender: Joi.string().valid(...Object.values(noticeSexes)),
+  date: Joi.string().valid(...Object.values(dateFilterOptions)),
+  query: Joi.string().max(32),
+})
+
 const schemas = {
   addNoticeSchema,
+  paramsNoticeSchema,
 }
 
 const Notice = model("notice", noticeSchema)

@@ -3,6 +3,7 @@ const ctrlWrapper = require("./ctrlWrapper")
 const handleMongooseError = require("./handleMongooseError")
 const sendEmail = require("./sendEmail")
 const isOneOf = require("./isOneOf")
+const objForSearch = require("./objForSearch")
 
 module.exports = {
   HttpError,
@@ -10,4 +11,5 @@ module.exports = {
   handleMongooseError,
   sendEmail,
   isOneOf,
+  objForSearch,
 }
