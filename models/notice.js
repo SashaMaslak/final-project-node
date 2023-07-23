@@ -34,7 +34,7 @@ const noticeSchema = new Schema(
     date: {
       type: String,
       match: dateRegex,
-      required: [true, "Set a date for the pet"],
+      //required: [true, "Set a date for the pet"],
     },
     type: {
       type: String,

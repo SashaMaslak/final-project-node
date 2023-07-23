@@ -29,7 +29,7 @@ const userSchema = new Schema(
       default: "",
     },
     birthday: {
-      type: Date,
+      type: String,
     },
     favorites: [{ type: Schema.Types.ObjectId, ref: "notice" }],
     ownPets: [{ type: Schema.Types.ObjectId, ref: "notice" }],
