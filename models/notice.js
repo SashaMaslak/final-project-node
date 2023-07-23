@@ -10,6 +10,7 @@ const {
   onlyLettersRegex,
   cityRegex,
 } = require("../constants")
+const { SELL, LOSTFOUND, FORFREE, MYPET } = noticeCategories
 
 const noticeSchema = new Schema(
   {
@@ -34,7 +35,10 @@ const noticeSchema = new Schema(
     date: {
       type: String,
       match: dateRegex,
-      required: [true, "Set a date for the pet"],
+      required: function () {
+        const isRequired = isOneOf(this.category, SELL, FORFREE, MYPET)
+        return [isRequired, "Set a date for the pet"]
+      },
     },
     type: {
       type: String,
@@ -51,29 +55,24 @@ const noticeSchema = new Schema(
       type: String,
       enum: Object.values(noticeSexes),
       required: function () {
-        return (
-          this.category === noticeCategories.SELL ||
-          this.category === noticeCategories.LOSTFOUND ||
-          this.category === noticeCategories.FORFREE
-        )
+        const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
+        return [isRequired, "Set a sex for the pet"]
       },
     },
     location: {
       type: String,
       match: cityRegex,
       required: function () {
-        return (
-          this.category === noticeCategories.SELL ||
-          this.category === noticeCategories.LOSTFOUND ||
-          this.category === noticeCategories.FORFREE
-        )
+        const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
+        return [isRequired, "Set a location for the pet"]
       },
     },
     price: {
       type: Number,
       min: 1,
       required: function () {
-        return this.category === noticeCategories.SELL
+        const isRequired = isOneOf(this.category, SELL)
+        return [isRequired, "Set a price for the pet"]
       },
     },
     comments: {
@@ -101,32 +100,29 @@ const addNoticeSchema = Joi.object({
     .required(),
   title: Joi.string().min(3).max(32).required(),
   name: Joi.string().min(2).max(16).required(),
-  date: Joi.string().pattern(dateRegex).required(),
+  date: Joi.string()
+    .pattern(dateRegex)
+    .when("category", {
+      is: Joi.valid(SELL, FORFREE, MYPET),
+      then: Joi.required(),
+    }),
   type: Joi.string().min(2).max(16).pattern(onlyLettersRegex).required(),
   sex: Joi.string()
     .valid(...Object.values(noticeSexes))
     .when("category", {
-      is: Joi.valid(
-        noticeCategories.SELL,
-        noticeCategories.LOSTFOUND,
-        noticeCategories.FORFREE
-      ),
+      is: Joi.valid(SELL, LOSTFOUND, FORFREE),
       then: Joi.required(),
     }),
   location: Joi.string()
     .pattern(cityRegex)
     .when("category", {
-      is: Joi.valid(
-        noticeCategories.SELL,
-        noticeCategories.LOSTFOUND,
-        noticeCategories.FORFREE
-      ),
+      is: Joi.valid(SELL, LOSTFOUND, FORFREE),
       then: Joi.required(),
     }),
   price: Joi.number()
     .min(1)
     .when("category", {
-      is: Joi.valid(noticeCategories.SELL),
+      is: Joi.valid(SELL),
       then: Joi.required(),
     }),
   comments: Joi.string().max(140),
