@@ -17,7 +17,7 @@ const router = express.Router()
 router.post(
   "/",
   authenticate,
-  uploadFile.single("avatar"),
+  uploadFile.single("file"),
   validateBody(schemas.addNoticeSchema),
   ctrl.add
 )
