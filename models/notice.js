@@ -1,6 +1,5 @@
-const { Schema, model, Types } = require("mongoose")
+const { Schema, model } = require("mongoose")
 const Joi = require("joi")
-const { format } = require("date-fns")
 
 const { handleMongooseError, HttpError } = require("../helpers")
 const { User } = require("./user")
@@ -91,16 +90,6 @@ const noticeSchema = new Schema(
 )
 
 noticeSchema.post("save", handleMongooseError)
-noticeSchema.post("find", function (notices) {
-  notices.forEach(notice => {
-    notice.date = format(new Date(notice.date), "dd-MM-yyyy")
-  })
-  return notices
-})
-noticeSchema.post("findOne", function (notice) {
-  notice.date = format(new Date(notice.date), "dd-MM-yyyy")
-  return notice
-})
 
 /**
  * Схеми Joi (addNoticeSchema)

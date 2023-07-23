@@ -4,6 +4,7 @@ const dateFilterOptions = require("./dateFilterOptions")
 const {
   dateRegex,
   onlyLettersRegex,
+  cityRegex,
   emailRegex,
   pswRegex,
   phoneRegex,
@@ -15,6 +16,7 @@ module.exports = {
   dateFilterOptions,
   dateRegex,
   onlyLettersRegex,
+  cityRegex,
   emailRegex,
   pswRegex,
   phoneRegex,

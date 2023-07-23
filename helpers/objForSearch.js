@@ -39,9 +39,17 @@ const objForSearch = obj => {
   const newObj = {}
   for (const key in obj) {
     if (obj[key]) {
-      if (key === "query") newObj["title"] = new RegExp(obj[key], "i")
-      else if (key === "date") newObj["date"] = filterAge(obj[key])
-      else newObj[key] = obj[key]
+      if (key === "query") {
+        newObj["$or"] = [
+          { title: { $regex: new RegExp(obj[key]), $options: "i" } },
+          { name: { $regex: new RegExp(obj[key]), $options: "i" } },
+          { type: { $regex: new RegExp(obj[key]), $options: "i" } },
+        ]
+      } else if (key === "date") {
+        newObj["date"] = filterAge(obj[key])
+      } else {
+        newObj[key] = obj[key]
+      }
     }
   }
   return newObj
