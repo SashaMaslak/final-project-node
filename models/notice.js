@@ -62,7 +62,7 @@ const noticeSchema = new Schema(
     },
     location: {
       type: String,
-      match: cityRegex,
+      minlength: 2,
       required: function () {
         const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
         return [isRequired, "Set a location for the pet"]

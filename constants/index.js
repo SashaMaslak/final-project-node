@@ -4,9 +4,9 @@ const dateFilterOptions = require("./dateFilterOptions")
 const {
   dateRegex,
   onlyLettersRegex,
-  cityRegex,
-  emailRegexp,
-  pswRegexp,
+  emailRegex,
+  pswRegex,
+  phoneRegex,
 } = require("./regex")
 
 module.exports = {
@@ -15,8 +15,8 @@ module.exports = {
   dateFilterOptions,
   dateRegex,
   onlyLettersRegex,
-  cityRegex,
-  emailRegexp,
-  pswRegexp,
+  emailRegex,
+  pswRegex,
+  phoneRegex,
   imageFileLimit: 3 * 1024 * 1024,
 }
