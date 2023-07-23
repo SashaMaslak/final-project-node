@@ -27,7 +27,6 @@ const userSchema = new Schema(
     },
     city: {
       type: String,
-      minlength: 2,
       default: "",
     },
     phone: {
@@ -64,7 +63,7 @@ userSchema.post("save", handleMongooseError)
 const registerSchema = Joi.object({
   name: Joi.string().min(2).required(),
   email: Joi.string().pattern(emailRegex).required(),
-  password: Joi.string().min(6).max(16).required(),
+  password: Joi.string().pattern(pswRegex).min(6).max(16).required(),
 })
 
 const emailSchema = Joi.object({
@@ -73,7 +72,7 @@ const emailSchema = Joi.object({
 
 const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegex).required(),
-  password: Joi.string().min(6).max(16).required(),
+  password: Joi.string().required(),
 })
 
 const updateSchema = Joi.object({
