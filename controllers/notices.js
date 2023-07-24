@@ -22,7 +22,7 @@ const getAll = async (req, res) => {
   } = req.query
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
-  const result = await await Notice.find(findObject, "", { skip, limit })
+  const result = await Notice.find(findObject, "", { skip, limit })
   res.json(result.map(transformNotice))
 }
 
