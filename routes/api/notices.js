@@ -6,13 +6,18 @@ const {
   isValidId,
   authenticate,
   uploadFile,
+  validateParams,
 } = require("../../middlewares")
 
 const router = express.Router()
 
-// router.get("/", authenticate, ctrl.getAll)
+router.get("/", validateParams(schemas.paramsNoticeSchema), ctrl.getAll)
 
-// router.get("/:noticeId", authenticate, isValidId, ctrl.getById)
+router.get("/favorite", authenticate, ctrl.getFavorites)
+
+router.get("/owner", authenticate, ctrl.getByOwner)
+
+router.get("/:noticeId", isValidId, ctrl.getById)
 
 router.post(
   "/",
@@ -22,22 +27,8 @@ router.post(
   ctrl.add
 )
 
-// router.put(
-//   "/:noticeId",
-//   authenticate,
-//   isValidId,
-// validateBody(schemas.addNoticeSchema),
-//   ctrl.updateById
-// )
-
-// router.patch(
-//   "/:noticeId/favorite",
-//   authenticate,
-//   isValidId,
-//   validateBody(schemas.updateFavoriteSchema),
-//   ctrl.updateFavorite
-// )
-
 router.delete("/:noticeId", authenticate, isValidId, ctrl.deleteById)
+
+router.post("/:noticeId/favorite", authenticate, ctrl.toggleNoticeFavorite)
 
 module.exports = router

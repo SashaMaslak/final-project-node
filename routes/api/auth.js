@@ -31,6 +31,4 @@ router.patch(
   ctrl.updateAvatar
 )
 
-router.post("/:noticeId/favorite", authenticate, ctrl.toggleNoticeFavorite)
-
 module.exports = router
