@@ -24,7 +24,10 @@ const noticeSchema = new Schema(
       type: String,
       minlength: 4,
       maxlength: 32,
-      required: [true, "Set a title for the pet"],
+      required: function () {
+        const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
+        return [isRequired, "Set a title for the pet"]
+      },
     },
     name: {
       type: String,
@@ -98,7 +101,13 @@ const addNoticeSchema = Joi.object({
   category: Joi.string()
     .valid(...Object.values(noticeCategories))
     .required(),
-  title: Joi.string().min(3).max(32).required(),
+  title: Joi.string()
+    .min(3)
+    .max(32)
+    .when("category", {
+      is: Joi.valid(SELL, LOSTFOUND, FORFREE),
+      then: Joi.required(),
+    }),
   name: Joi.string().min(2).max(16).required(),
   date: Joi.string()
     .pattern(dateRegex)
