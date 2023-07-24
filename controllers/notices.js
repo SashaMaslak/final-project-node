@@ -53,7 +53,12 @@ const add = async (req, res) => {
   }
   const { _id: owner } = req.user
   const { path: file } = req.file
-  const result = await Notice.create({ ...req.body, file, owner })
+  const result = await Notice.create({
+    ...req.body,
+    date: moment(req.body.date),
+    file,
+    owner,
+  })
   if (result.category === noticeCategories.MYPET) {
     await User.findByIdAndUpdate(owner, { $push: { ownPets: result._id } })
   }
