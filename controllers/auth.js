@@ -152,8 +152,21 @@ const logout = async (req, res) => {
 }
 
 const getCurrent = async (req, res) => {
-  const { email, name } = req.user
-  res.json({ email, name })
+  const { _id, email, name, city, phone, favorites, ownPets, avatar, token } =
+    req.user
+
+  const user = {
+    id: _id,
+    name,
+    email,
+    city,
+    phone,
+    favorites,
+    ownPets,
+    avatar,
+  }
+
+  res.json(token, user)
 }
 
 const getUserIdFromToken = authorizationHeader => {
