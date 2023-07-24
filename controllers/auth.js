@@ -176,14 +176,14 @@ const refreshToken = async (req, res) => {
   const authorizationHeader = req.headers.authorization
 
   if (!authorizationHeader) {
-    return res.status(401).json({ error: "Authorization header missing" })
+    throw res.status(401).json({ error: "Authorization header missing" })
   }
 
   try {
     const userId = getUserIdFromToken(authorizationHeader)
     const user = await User.findOne({ _id: userId })
     if (!user) {
-      return res.status(401).json({ error: "Invalid token" })
+      throw res.status(401).json({ error: "Invalid token" })
     }
 
     const payload = {
