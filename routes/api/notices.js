@@ -29,6 +29,11 @@ router.post(
 
 router.delete("/:noticeId", authenticate, isValidId, ctrl.deleteById)
 
-router.post("/:noticeId/favorite", authenticate, ctrl.toggleNoticeFavorite)
+router.post(
+  "/:noticeId/favorite",
+  authenticate,
+  isValidId,
+  ctrl.toggleNoticeFavorite
+)
 
 module.exports = router
