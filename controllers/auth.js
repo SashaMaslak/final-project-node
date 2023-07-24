@@ -8,45 +8,31 @@ require("dotenv").config()
 const { User } = require("../models/user.js")
 const { ctrlWrapper, HttpError, sendEmail } = require("../helpers/index.js")
 
-const { SECRET_KEY, BASE_URL } = process.env
+const { SECRET_KEY, BASE_URL_FRONTEND } = process.env
 
 const register = async (req, res) => {
   const { email, password } = req.body
   const user = await User.findOne({ email })
-
   if (user) {
     throw HttpError(409, "Email already in use")
   }
-
   const hashPassword = await bcrypt.hash(password, 10)
   const avatar = gravatar.url(email)
   const verificationToken = nanoid()
-
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatar,
     verificationToken,
-    verify: true,
+    verify: false,
   })
-
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">HELLO my friend, Click for verify your email</a>`,
+    html: `<a target="_blank" href="${BASE_URL_FRONTEND}/afterverify/${verificationToken}">HELLO my friend, Click for verify your email</a>`,
   }
-
   await sendEmail(verifyEmail)
-
-  const payload = {
-    id: newUser._id,
-  }
-
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
-  await User.findByIdAndUpdate(newUser._id, { token })
-
   res.status(201).json({
-    token,
     user: {
       id: newUser._id,
       name: newUser.name,
@@ -63,24 +49,18 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body
   const user = await User.findOne({ email })
-
   if (!user) {
     throw HttpError(401, "Email or password is wrong")
-  }
-
-  if (!user.verify) {
+  } else if (!user.verify) {
     throw HttpError(401, "Email not verified")
   }
-
   const passwordCompare = await bcrypt.compare(password, user.password)
   if (!passwordCompare) {
     throw HttpError(401, "Email or password is wrong")
   }
-
   const payload = {
     id: user._id,
   }
-
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
   await User.findByIdAndUpdate(user._id, { token })
   res.json({
@@ -100,52 +80,42 @@ const login = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   const { verificationToken } = req.params
-
   const user = await User.findOne({ verificationToken })
-
   if (!user) {
     HttpError(404, "User not found")
-  }
-  if (user.verificationToken) {
+  } else if (!user.verificationToken) {
     HttpError(404)
   }
-
   await User.findByIdAndUpdate(user._id, {
     verify: true,
     verificationToken: "",
   })
-  res.status(200).json({ message: "Verification successful" })
+  const payload = { id: user._id }
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
+  res.json({ token })
 }
 
 const resendVerifyEmail = async (req, res) => {
   const { email } = req.body
   const user = await User.findOne({ email })
-
   if (!user) {
-    throw HttpError(401, "User not found")
-  }
-
-  if (user.verify) {
+    throw HttpError(404, "User not found")
+  } else if (user.verify) {
     throw HttpError(401, "Verification has already been passed")
   }
-
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL_FRONTEND}/afterverify/${verificationToken}">Click verify email</a>`,
   }
-
   await sendEmail(verifyEmail)
-
   res.json({ message: "Verify email send success" })
 }
 
 const logout = async (req, res) => {
   const { _id } = req.user
   await User.findByIdAndUpdate(_id, { token: "" })
-  res.status(204, "Logout success").json({
-    message: "Logout success",
-  })
+  res.status(204).json({ message: "Logout success" })
 }
 
 const getCurrent = async (req, res) => {
@@ -163,7 +133,7 @@ const getCurrent = async (req, res) => {
     avatar,
   }
 
-  res.json(token, user)
+  res.json({ token, user })
 }
 
 const getUserIdFromToken = authorizationHeader => {
@@ -174,52 +144,44 @@ const getUserIdFromToken = authorizationHeader => {
 
 const refreshToken = async (req, res) => {
   const authorizationHeader = req.headers.authorization
-
   if (!authorizationHeader) {
-    throw res.status(401).json({ error: "Authorization header missing" })
+    throw HttpError(401, "Authorization header missing")
   }
-
+  const userId = getUserIdFromToken(authorizationHeader)
+  const user = await User.findOne({ _id: userId })
+  if (!user) {
+    throw HttpError(401, "Invalid token")
+  }
   try {
-    const userId = getUserIdFromToken(authorizationHeader)
-    const user = await User.findOne({ _id: userId })
-    if (!user) {
-      throw res.status(401).json({ error: "Invalid token" })
-    }
-
-    const payload = {
-      id: user._id,
-    }
+    const payload = { id: user._id }
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
-    await User.findByIdAndUpdate(user._id, { token })
-
-    return res.json({
-      token,
-      user: {
-        email: user.email,
-        subscription: user.subscription,
-        avatar: user.avatarURL,
-        name: user.name,
-        surname: user.surname,
-        phone: user.phone,
-        country: user.country,
-      },
-    })
   } catch (error) {
-    return error.message === "jwt expired"
-      ? res.status(400).json({ error: "Invalid Token" })
-      : res.status(500).json({ error: "Server error" })
+    if (error.message === "jwt expired") {
+      throw HttpError(400, "Invalid Token")
+    }
+    throw HttpError(500, "Server error")
   }
+  await User.findByIdAndUpdate(user._id, { token })
+  res.json({
+    token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+      avatar: user.avatarURL,
+      name: user.name,
+      surname: user.surname,
+      phone: user.phone,
+      country: user.country,
+    },
+  })
 }
 
 const updateUser = async (req, res) => {
   const { _id } = req.user
-  const result = await User.findByIdAndUpdate(_id, req.body, {
+  const user = await User.findByIdAndUpdate(_id, req.body, {
     new: true,
   })
-  if (!result) {
-    throw HttpError(404, "Not found")
-  }
-  res.json(result)
+  res.json({ user })
 }
 
 const updateAvatar = async (req, res) => {
@@ -232,10 +194,6 @@ const updateAvatar = async (req, res) => {
       new: true,
     }
   )
-
-  if (!result) {
-    throw HttpError(404, "Not found")
-  }
   res.json({ avatar })
 }
 

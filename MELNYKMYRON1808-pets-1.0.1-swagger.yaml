@@ -1,0 +1,1082 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: Api por your pets
+    url: https://final-project-node-5vh7.onrender.com/
+
+info:
+  version: 1.0.1
+  title: Pets
+  description: Your Pet project
+paths:
+  # --------------------------- User ---------------------------
+  "/users/register":
+    post:
+      tags:
+        - User
+      description: Реєстрацію користувача (Публічний)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 2
+                      maxLength: 16
+                      default: "Myname"
+                    email:
+                      type: string
+                      format: email
+                      pattern: "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
+                      description: спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери
+                      default: "abc@gmail.com"
+                    password:
+                      type: string
+                      format: password
+                      minLength: 6
+                      pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,16})"
+                      description: від 6 до 16 з хоча б одною UpperCase, одною LowerCase та одною цифрою
+                      default: "qWeRe2"
+      responses:
+        "201":
+          description: Успіх, зареєстровано
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    default: eyJhbGciOiJIUzI1NiIskpXVCJ9.eyJpZCI6IjY0YmFlYTyNzE1NywiZXhwIjoxNjkwMjA5OTU3fQ.RzBsRvQx58EfTsWBAU2kRzT-AXVcXaQ
+                  user:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Помилка валідації
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "\"password\" is required"
+        "409":
+          description: Email вже існує
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Email already in use"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error" 
+         
+  "/users/login":
+    post:
+      tags:
+        - User
+      description: Вхід користувача (Публічний)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  pattern: "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
+                  description: спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери
+                  default: "abc@gmail.com"
+                password:
+                  type: string
+                  format: password
+                  minLength: 6
+                  pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,16})"
+                  description: від 6 до 16 з хоча б одною UpperCase, одною LowerCase та одною цифрою
+                  default: "qWeRe2"
+      responses:
+        "200":
+          description: Успіх, залогінено, повернено jwt token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    default: eyJhbGciOiJIUzI1NiIskpXVCJ9.eyJpZCI6IjY0YmFlYTyNzE1NywiZXhwIjoxNjkwMjA5OTU3fQ.RzBsRvQx58EfTsWBAU2kRzT-AXVcXaQ
+                  user:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Помилка валідації
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "\"password\" is required"
+        "401":
+          description: Неправильний email чи password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Email or password is wrong"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error" 
+      
+  "/users/current":
+    get:
+      tags:
+        - User
+      security:
+        - BearerToken: []
+      description: Дізнатися email, name користувача (Приватний)
+      responses:
+        "200":
+          description: Успіх, віддано email, name користувача
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    default: 'Myname'
+                  email:
+                    type: string
+                    default: 'abc@gmail.com'
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error" 
+      
+  "/users/logout":
+    post:
+      tags:
+        - User
+      security:
+        - BearerToken: []
+      description: Логаут користувача (Приватний)
+      responses:
+        "204":
+          description: Успіх, стерто jwt в базі даних
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Logout success"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+
+  "/users/avatar":
+    patch:
+      tags:
+        - User
+      security:
+        - BearerToken: []
+      description: Змінити аватар (Приватний)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Успіх, аватар успішно змінено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatar: 
+                    type: string
+                    default: "http://..."
+        "400": 
+          description: Помилка в запиті (можливо тому, що multipart/form-data не має поля avatar)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Missed required avatar form-data field"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+      
+  "/users":
+    put:
+      tags:
+        - User
+      security:
+        - BearerToken: []
+      description: Для оновлення даних користувача (Приватний)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 16
+                  default: "Myname"
+                email:
+                  type: string
+                  format: email
+                  pattern: "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
+                  description: спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери
+                  default: "abc@gmail.com"
+                phone:
+                  type: string
+                  pattern: "^\\+\\d{12}$"
+                  description: Починається з +, лише 12 цифер, без пробілів, та без букв
+                  default: "+380984739205"
+                birthday:
+                  type: string
+                  pattern: "^\\d{2}-\\d{2}-\\d{4}$"
+                  description: Date of birth in the format DD-MM-YYYY
+                  default: "22-02-2023"
+                city:
+                  type: string
+                  default: "Lviv"
+      responses:
+        "200":
+          description: Успіх, аватар успішно змінено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400": 
+          description: Помилка в запиті (можливо тому, що multipart/form-data не має поля avatar)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Missed required avatar form-data field"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+      
+  "/verify/{verificationToken}":
+    get:
+      tags:
+        - User
+      description: Підтвердження пошти (Публічний)
+      parameters:
+        - name: verificationToken
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Успіх, пошту підтверджено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    default: eyJhbGciOiJIUzI1NiIskpXVCJ9.eyJpZCI6IjY0YmFlYTyNzE1NywiZXhwIjoxNjkwMjA5OTU3fQ.RzBsRvQx58EfTsWBAU2kRzT-AXVcXaQ
+                  user:
+                    $ref: "#/components/schemas/User"
+        "404":
+          description: Не знайдено User за цим verificationToken
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "User not found"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error" 
+    
+  "/verify":
+    post:
+      tags:
+        - User
+      description: Надіслати знову підтвердження пошти (Публічний)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  pattern: "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
+                  description: спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери
+                  default: "abc@gmail.com"
+      responses:
+        "200":
+          description: Успіх, пошту підтверджено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: "Verify email send success"
+        "400":
+          description: Помилка валідації
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "\"email\" with value \"@gmail.com\" fails to match the required pattern: /^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$/"
+        "401":
+          description: Верифікацію уже пройдено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Verification has already been passed"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+
+
+  # --------------------------- Notices ---------------------------
+  "/notices":
+    get:
+      tags:
+        - Notice
+      description: Отримати 10 з пагінацією з фільтрами та піошуком (Публічний)
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            default: "sell"
+            enum:
+            - "sell"
+            - "lost-found"
+            - "for-free"
+            - "my-pet"
+        - name: date
+          in: query
+          schema:
+            type: string
+            default: "3-12m"
+            enum:
+            - "3-12m"
+            - "1y"
+            - "2y"
+        - name: sex
+          in: query
+          schema:
+            type: string
+            default: "female"
+            enum:
+            - "female"
+            - "male"
+        - name: query
+          in: query
+          schema:
+            type: string
+            default: "cat"
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Успіх, отримано 10, або менше notices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notices:
+                    type: array
+                    items: 
+                      $ref: "#/components/schemas/Notice"
+        "400": 
+          description: Неправильний запит (в параметрах)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "\"date\" must be one of [3-12m, 1y, 2y]"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+    post:
+      tags:
+        - Notice
+      security:
+        - BearerToken: []
+      description: Створити новий notice (Приватний)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                "category": 
+                  type: string
+                  default: "for-free"
+                  enum:
+                    - "sell"
+                    - "lost-found"
+                    - "for-free"
+                    - "my-pet"
+                "title": 
+                  type: string
+                  default: "Сute dog looking for a home"
+                "name": 
+                  type: string
+                  default: "Rich"
+                "date": 
+                  type: string
+                  default: "21-09-2020"
+                "type": 
+                  type: string
+                  default: "Pomeranian"
+                "file":
+                  type: string
+                  format: binary
+                "sex": 
+                  type: string
+                  default: "male"
+                  enum:
+                    - "male"
+                    - "female"
+                "location": 
+                  type: string
+                  default: "Lviv"
+                "comments": 
+                  type: string
+                  default: "Rich would be the perfect addition to an active family that loves to play and go on walks. I bet he would love having a doggy playmate too!"   
+      responses:
+        "201":
+          description: Успіх створений, повертає сам notice
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notice:
+                    $ref: "#/components/schemas/Notice"
+        "400": 
+          description: Помилка в запиті (можливо тому, що це не multipart/form-data)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Missed required avatar form-data field"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+                
+  "/notices/favorite":
+    get:
+      tags:
+        - Notice
+      security:
+        - BearerToken: []
+      description: Отримати масив улюблених pets-ів (доданих в favorite) (Приватний)
+      responses:
+        "200":
+          description: Успіх, отримано масив улюблених
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  favorites:
+                    type: array
+                    items: 
+                      $ref: "#/components/schemas/Notice"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+           
+  "/notices/owner":
+    get:
+      tags:
+        - Notice
+      security:
+        - BearerToken: []
+      description: Отримати масив лише своїх публікацій (Приватний)
+      responses:
+        "200":
+          description: Успіх, отримано масив всіх свої публікацій
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notices:
+                    type: array
+                    items: 
+                      $ref: "#/components/schemas/Notice"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+                
+  "/notices/{noticeId}":
+    get:
+      tags:
+        - Notice
+      description: Отримати один notice по id (Публічний)
+      parameters:
+        - name: noticeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Успіх, отримано один notice
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notice: 
+                    $ref: "#/components/schemas/Notice"
+        "400": 
+          description: Невалідний id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "5556566 is not valid id"
+        "404": 
+          description: Не знайдено notice за даним id 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Notice not found"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+    delete:
+      tags:
+        - Notice
+      security:
+        - BearerToken: []
+      description: Видалити notice (Приватний)
+      parameters:
+        - name: noticeId 
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Успіх видалено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Delete success"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "404":
+          description: Notice не знайдено (тож не може бути видалено)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not found"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+   
+  "/{noticeId}/favorite":
+    get:
+      tags:
+        - Notice
+      security:
+        - BearerToken: []
+      description: Toggle на додавання / видалення користувача із масиву favorites (Приватний)
+      parameters:
+        - name: noticeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Успіх, додавано / видалено notice із масиву favorites
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  favorites:
+                    type: array
+                    items: 
+                      $ref: "#/components/schemas/Notice"
+        "400": 
+          description: Невалідний id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "5556566 is not valid id"
+        "401":
+          description: Неавторизований користувач (JWT token відсутній)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Not authorized"
+        "404": 
+          description: Не знайдено notice за даним id 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Notice not found"
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+
+  
+  # --------------------------- Public ---------------------------
+  "/sponsors.json":
+    get:
+      tags:
+        - Public
+      description: Отримати масив спонсорів (Публічний)  
+      responses:
+        "200":
+          description: Віддає json спонсорів
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title: 
+                      type: string
+                      nullable: true
+                      default: "Притулок для бездомних тварин 'Сіріус'"
+                    url:
+                      type: string
+                      nullable: true
+                      default: "https://dogcat.com.ua"
+                    addressUrl:
+                      type: string
+                      nullable: true
+                      default: "https://goo.gl/maps/iq8NXEUf31EAQCzc6"
+                    imageUrl:
+                      type: string
+                      nullable: true
+                      default: "https://storage.googleapis.com/kidslikev2_bucket/pets-support/images/sponsors/frame_287.png"
+                    address:
+                      type: string
+                      nullable: true
+                      default: "Fedorivka, Kyiv Oblast, Ukraine, 07372"
+                    workDays:
+                      type: array
+                      nullable: true
+                      items:
+                        type: object
+                        properties:
+                          isOpen:
+                            type: boolean
+                            nullable: true
+                            default: false
+                          from:
+                            type: string
+                            nullable: true
+                            default: "11:00"
+                          to:
+                            type: string
+                            nullable: true
+                            default: "16:00"
+                    phone:
+                      type: string
+                      nullable: true
+                      default: "+380931934069"
+                    email:
+                      type: string
+                      nullable: true
+                      default: null
+        "500":
+          description: Помилка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    default: "Server error"
+
+  
+  # --------------------------- Conponents ---------------------------
+components:
+  securitySchemes:
+    BearerToken:
+      type: apiKey
+      in: header
+      name: AuthorizationBearerToken
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          minLength: 2
+          maxLength: 16
+        email:
+          type: string
+          format: email
+          pattern: "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
+          description: спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери
+        password:
+          type: string
+          format: password
+          minLength: 6
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,16})"
+          description: від 6 до 16 з хоча б одною UpperCase, одною LowerCase та одною цифрою
+        city:
+          type: string
+        phone:
+          type: string
+          pattern: "^\\+\\d{12}$"
+          description: Починається з +, лише 12 цифер, без пробілів, та без букв
+        birthday:
+          type: string
+          pattern: "^\\d{2}-\\d{2}-\\d{4}$"
+          description: Date of birth in the format DD-MM-YYYY
+        favorites: 
+          type: array
+          items:
+            type: integer
+            format: int64
+        ownPets: 
+          type: array
+          items:
+            type: integer
+            format: int64
+        avatar: 
+          type: string
+        token:
+          type: string
+          default: ""
+        verify:
+          type: boolean
+          default: false
+        verificationToken:
+          type: string
+          default: ""
+  
+    Notice:
+      type: object
+      properties:
+        _id:
+          type: integer
+          format: int64
+        category: 
+          type: string
+          enum:
+            - "sell"
+            - "lost-found"
+            - "for-free"
+            - "my-pet"
+        title:
+          type: string
+          minLength: 4
+          maxLength: 32
+        name:
+          type: string
+          minLength: 2
+          maxLength: 16
+        date:
+          type: string
+          format: date
+          pattern: "^\\d{2}-\\d{2}-\\d{4}$"
+          description: Date of birth in the format DD-MM-YYYY
+        type:
+          type: string
+          minLength: 2
+          maxLength: 16
+          pattern: "^[a-zA-Z ]+$"
+          description: Only letters without numbers
+        file: 
+          type: string
+        sex:
+          type: string
+          enum:
+            - "female"
+            - "male"
+        location:
+          type: string
+          pattern: "^[a-zA-Z]+$"
+          description: Only letters without space and numbers
+        price: 
+          type: integer
+          minimum: 1
+        comments:
+          type: string
+          maxLength: 120
+          default: ""
