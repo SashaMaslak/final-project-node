@@ -102,7 +102,7 @@ const toggleNoticeFavorite = async (req, res) => {
     },
     { new: true }
   ).populate("favorites")
-  res.json({ favorites: newUser.favorites })
+  res.json({ favorites: newUser.favorites.map(transformNotice) })
 }
 
 module.exports = {
