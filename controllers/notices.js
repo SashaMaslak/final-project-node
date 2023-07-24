@@ -29,7 +29,7 @@ const getAll = async (req, res) => {
 const getFavorites = async (req, res) => {
   const { _id } = req.user
   const { favorites } = await User.findById(_id).populate("favorites")
-  res.json({ favorites })
+  res.json({ favorites: favorites.map(transformNotice) })
 }
 
 const getByOwner = async (req, res) => {
