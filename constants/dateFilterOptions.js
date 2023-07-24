@@ -1,5 +1,5 @@
 const dateFilterOptions = Object.freeze({
-  UNDERONEYEAR: "312m",
+  UNDERONEYEAR: "3-12m",
   ONEYEAR: "1y",
   TWOYEARS: "2y",
 })
