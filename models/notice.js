@@ -115,7 +115,7 @@ const addNoticeSchema = Joi.object({
       is: Joi.valid(SELL, FORFREE, MYPET),
       then: Joi.required(),
     }),
-  type: Joi.string().min(2).max(16).pattern(onlyLettersRegex).required(),
+  type: Joi.string().min(2).max(16).required(),
   sex: Joi.string()
     .valid(...Object.values(noticeSexes))
     .when("category", {
