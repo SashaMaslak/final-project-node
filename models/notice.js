@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose")
 const Joi = require("joi")
 
-const { handleMongooseError, HttpError } = require("../helpers")
+const { handleMongooseError, HttpError, isOneOf } = require("../helpers")
 const { User } = require("./user")
 const {
   noticeCategories,
