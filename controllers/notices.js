@@ -93,6 +93,10 @@ const deleteById = async (req, res) => {
 const toggleNoticeFavorite = async (req, res) => {
   const { _id, favorites } = req.user
   const { noticeId } = req.params
+  const notice = await Notice.findById(noticeId)
+  if (!notice) {
+    throw HttpError(404, "Notice not found")
+  }
   const isInFavorites = favorites.some(itemId => noticeId === itemId.toString())
   const action = isInFavorites ? "$pull" : "$push"
   const newUser = await User.findByIdAndUpdate(
