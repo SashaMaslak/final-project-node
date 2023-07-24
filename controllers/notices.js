@@ -23,19 +23,19 @@ const getAll = async (req, res) => {
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
   const result = await await Notice.find(findObject, "", { skip, limit })
-  res.json(result.map(transformNotice))
+  res.json({ notices: result.map(transformNotice) })
 }
 
 const getFavorites = async (req, res) => {
   const { _id } = req.user
   const { favorites } = await User.findById(_id).populate("favorites")
-  res.json({ favorites })
+  res.json({ favorites: favorites.map(transformNotice) })
 }
 
 const getByOwner = async (req, res) => {
   const { _id: owner } = req.user
   const result = await Notice.find({ owner })
-  res.json(result.map(transformNotice))
+  res.json({ notices: result.map(transformNotice) })
 }
 
 const getById = async (req, res) => {
@@ -44,7 +44,7 @@ const getById = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Notice not found")
   }
-  res.json(transformNotice(result))
+  res.json({ notice: transformNotice(result) })
 }
 
 const add = async (req, res) => {
@@ -53,11 +53,16 @@ const add = async (req, res) => {
   }
   const { _id: owner } = req.user
   const { path: file } = req.file
-  const result = await Notice.create({ ...req.body, file, owner })
+  const result = await Notice.create({
+    ...req.body,
+    date: moment(req.body.date),
+    file,
+    owner,
+  })
   if (result.category === noticeCategories.MYPET) {
     await User.findByIdAndUpdate(owner, { $push: { ownPets: result._id } })
   }
-  res.status(201).json(transformNotice(result))
+  res.status(201).json({ notice: transformNotice(result) })
 }
 
 const deleteById = async (req, res) => {
@@ -88,6 +93,10 @@ const deleteById = async (req, res) => {
 const toggleNoticeFavorite = async (req, res) => {
   const { _id, favorites } = req.user
   const { noticeId } = req.params
+  const notice = await Notice.findById(noticeId)
+  if (!notice) {
+    throw HttpError(404, "Notice not found")
+  }
   const isInFavorites = favorites.some(itemId => noticeId === itemId.toString())
   const action = isInFavorites ? "$pull" : "$push"
   const newUser = await User.findByIdAndUpdate(
@@ -97,7 +106,7 @@ const toggleNoticeFavorite = async (req, res) => {
     },
     { new: true }
   ).populate("favorites")
-  res.json({ favorites: newUser.favorites })
+  res.json({ favorites: newUser.favorites.map(transformNotice) })
 }
 
 module.exports = {
