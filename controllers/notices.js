@@ -23,7 +23,7 @@ const getAll = async (req, res) => {
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
   const result = await await Notice.find(findObject, "", { skip, limit })
-  res.json(result.map(transformNotice))
+  res.json({ notices: result.map(transformNotice) })
 }
 
 const getFavorites = async (req, res) => {
@@ -35,7 +35,7 @@ const getFavorites = async (req, res) => {
 const getByOwner = async (req, res) => {
   const { _id: owner } = req.user
   const result = await Notice.find({ owner })
-  res.json(result.map(transformNotice))
+  res.json({ notices: result.map(transformNotice) })
 }
 
 const getById = async (req, res) => {
@@ -44,7 +44,7 @@ const getById = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Notice not found")
   }
-  res.json(transformNotice(result))
+  res.json({ notice: transformNotice(result) })
 }
 
 const add = async (req, res) => {
@@ -62,7 +62,7 @@ const add = async (req, res) => {
   if (result.category === noticeCategories.MYPET) {
     await User.findByIdAndUpdate(owner, { $push: { ownPets: result._id } })
   }
-  res.status(201).json(transformNotice(result))
+  res.status(201).json({ notice: transformNotice(result) })
 }
 
 const deleteById = async (req, res) => {
