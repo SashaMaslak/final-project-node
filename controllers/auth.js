@@ -45,21 +45,19 @@ const register = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
   await User.findByIdAndUpdate(newUser._id, { token })
 
-  res.status(201).json(
-    res.status(201).json({
-      token,
-      user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        city: newUser.city,
-        phone: newUser.phone,
-        favorites: newUser.favorites,
-        ownPets: newUser.ownPets,
-        avatar: newUser.avatar,
-      },
-    })
-  )
+  res.status(201).json({
+    token,
+    user: {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      city: newUser.city,
+      phone: newUser.phone,
+      favorites: newUser.favorites,
+      ownPets: newUser.ownPets,
+      avatar: newUser.avatar,
+    },
+  })
 }
 
 const login = async (req, res) => {
