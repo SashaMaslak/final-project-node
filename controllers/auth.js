@@ -11,9 +11,11 @@ const {
   HttpError,
   sendEmail,
   transformUser,
-} = require("../helpers/index.js")
+  getEnv,
+} = require("../helpers")
 
-const { SECRET_KEY, BASE_URL_FRONTEND } = process.env
+const { SECRET_KEY } = process.env
+const { BASE_URL_FRONTEND } = getEnv()
 
 const register = async (req, res) => {
   const { email, password } = req.body

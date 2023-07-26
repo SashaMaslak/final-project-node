@@ -3,6 +3,7 @@ const logger = require("morgan")
 const cors = require("cors")
 
 const authRouter = require("./routes/api/auth")
+const authGoogleRouter = require("./routes/api/auth-google")
 const noticesRouter = require("./routes/api/notices")
 const apiDocsRouter = require("./routes/api/api-docs")
 
@@ -16,6 +17,8 @@ app.use(express.json())
 app.use(express.static("public"))
 
 app.use("/users", authRouter)
+
+app.use("/auth", authGoogleRouter)
 
 app.use("/notices", noticesRouter)
 

@@ -33,7 +33,6 @@ const userSchema = new Schema(
     },
     city: {
       type: String,
-      minlength: 2,
       match: cityRegex,
       default: "",
     },
