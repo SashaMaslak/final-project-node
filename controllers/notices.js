@@ -24,23 +24,23 @@ const getAll = async (req, res) => {
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
   const result = await await Notice.find(findObject, "", { skip, limit })
-  res.json({ notices: result.map(transformNotice) })
+  res.json({ notices: result.map(transformMinifiedNotice) })
 }
 
 const getMyPets = async (req, res) => {
   const user = await req.user.populate("ownPets")
-  res.json({ notices: user.ownPets.map(transformNotice) })
+  res.json({ notices: user.ownPets.map(transformMinifiedNotice) })
 }
 
 const getFavoriteAds = async (req, res) => {
   const { favorites } = await req.user.populate("favorites")
-  res.json({ notices: favorites.map(transformNotice) })
+  res.json({ notices: favorites.map(transformMinifiedNotice) })
 }
 
 const getMyAds = async (req, res) => {
   const { _id: owner } = req.user
   const result = await Notice.find({ owner })
-  res.json({ notices: result.map(transformNotice) })
+  res.json({ notices: result.map(transformMinifiedNotice) })
 }
 
 const getById = async (req, res) => {
@@ -92,7 +92,7 @@ const deleteById = async (req, res) => {
     })
   }
   await Notice.findByIdAndRemove(noticeId)
-  res.json({ message: "Delete success" })
+  res.json({ message: "Delete successfully" })
 }
 
 const toggleNoticeFavorite = async (req, res) => {
@@ -111,7 +111,11 @@ const toggleNoticeFavorite = async (req, res) => {
     },
     { new: true }
   ).populate("favorites")
-  res.json({ favorites: newUser.favorites.map(transformNotice) })
+  res.json({
+    message: isInFavorites
+      ? "Deleted from favorites successfully"
+      : "Added to favorites successfully",
+  })
 }
 
 module.exports = {

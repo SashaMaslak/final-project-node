@@ -7,12 +7,65 @@ const format = dateStr => {
   return result
 }
 
+const calcAge = dateStr => {
+  const date = new Date(dateStr)
+  const today = new Date()
+
+  const yearDiff = today.getFullYear() - date.getFullYear()
+  const monthDiff = today.getMonth() - date.getMonth()
+  const dayDiff = today.getDate() - date.getDate()
+
+  if (yearDiff === 0 && monthDiff === 0 && dayDiff === 0) {
+    return "today"
+  }
+
+  let age = `${yearDiff} years`
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age = `${yearDiff - 1} years`
+  }
+
+  if (age === "1 years") {
+    age = "1 year"
+  } else if (age === "0 years") {
+    age = dayDiff < 0 ? `${monthDiff - 1} months` : `${monthDiff} months`
+    age = age === "1 months" ? "1 month" : age
+  }
+
+  if (age === "0 months") {
+    age = `${dayDiff} days`
+    age = age === "1 days" ? "1 day" : age
+  }
+
+  return age
+}
+
 const transformDate = dateStr => {
   const dateArr = dateStr.split("-")
   const tmp = dateArr[0]
   dateArr[0] = dateArr[2]
   dateArr[2] = tmp
   return dateArr.join("-")
+}
+
+const transformMinifiedNotice = () => {
+  const result = {
+    id: obj._id,
+    category: obj.category,
+    file: obj.file,
+  }
+  if (obj.title) {
+    result.title = obj.title
+  }
+  if (obj.date) {
+    result.age = calcAge(obj.date)
+  }
+  if (obj.sex) {
+    result.sex = obj.sex
+  }
+  if (obj.location) {
+    result.location = obj.location
+  }
+  return result
 }
 
 const transformNotice = obj => {
