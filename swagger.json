@@ -13,7 +13,9 @@
   ],
   "tags": [
     { "name": "User", "description": "Authorization endpoints" },
-    { "name": "Notice", "description": "Pet cards endpoints" }
+    { "name": "Notice", "description": "Pet cards endpoints" },
+    { "name": "Public", "description": "Public files and images" },
+    { "name": "Auth", "description": "Auth google endpoints" }
   ],
   "paths": {
     "/users/register": {
@@ -600,6 +602,60 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Помилка сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "Ідентифікація проекту, та користувача через google auth (Публічний)",
+        "responses": {
+          "302": {
+            "description": "Перенаправлено на https://accounts.google.com/o/oauth2/v2/auth ..."
+          },
+          "500": {
+            "description": "Помилка сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/google-redirect": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "Отримання даних користувача та їх перенапралення на фронтенд (технічний енпоінт для google НЕ ВИКОРИСТОВУВАТИ) (Публічний)",
+        "responses": {
+          "302": {
+            "description": "Перенаправлено на Фронтенд з параметрами ? email = & name = ..."
           },
           "500": {
             "description": "Помилка сервера",
