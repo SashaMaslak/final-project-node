@@ -27,15 +27,14 @@ const getAll = async (req, res) => {
 }
 
 const getFavorites = async (req, res) => {
-  const { _id } = req.user
-  const { favorites } = await User.findById(_id).populate("favorites")
+  clg
+  const { favorites } = await req.user.populate("favorites")
   res.json({ favorites: favorites.map(transformNotice) })
 }
 
-const getByOwner = async (req, res) => {
-  const { _id: owner } = req.user
-  const result = await Notice.find({ owner })
-  res.json({ notices: result.map(transformNotice) })
+const getMyPets = async (req, res) => {
+  const user = await req.user.populate("ownPets")
+  res.json({ notices: user.ownPets.map(transformNotice) })
 }
 
 const getById = async (req, res) => {
@@ -80,7 +79,7 @@ const deleteById = async (req, res) => {
     { $pull: { favorites: _id } }
   )
   // Лише якщо це категорія MYPET тоді видаляємо
-  // вткористуючи notice.owner , це ефективніше
+  // використуючи notice.owner , це ефективніше
   if (notice.category === noticeCategories.MYPET) {
     await User.findByIdAndUpdate(notice.owner, {
       $pull: { ownPets: notice._id },
@@ -112,7 +111,7 @@ const toggleNoticeFavorite = async (req, res) => {
 module.exports = {
   getAll: ctrlWrapper(getAll),
   getFavorites: ctrlWrapper(getFavorites),
-  getByOwner: ctrlWrapper(getByOwner),
+  getMyPets: ctrlWrapper(getMyPets),
   getById: ctrlWrapper(getById),
   add: ctrlWrapper(add),
   deleteById: ctrlWrapper(deleteById),

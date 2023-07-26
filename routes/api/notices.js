@@ -15,14 +15,14 @@ router.get("/", validateParams(schemas.paramsNoticeSchema), ctrl.getAll)
 
 router.get("/favorite", authenticate, ctrl.getFavorites)
 
-router.get("/owner", authenticate, ctrl.getByOwner)
+router.get("/mypets", authenticate, ctrl.getMyPets)
 
 router.get("/:noticeId", isValidId, ctrl.getById)
 
 router.post(
   "/",
   authenticate,
-  uploadFile.single("file"),
+  uploadFile.single("avatar"),
   validateBody(schemas.addNoticeSchema),
   ctrl.add
 )

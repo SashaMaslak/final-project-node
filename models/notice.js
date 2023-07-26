@@ -39,7 +39,7 @@ const noticeSchema = new Schema(
     date: {
       type: Date,
       required: function () {
-        const isRequired = isOneOf(this.category, SELL, FORFREE, MYPET)
+        const isRequired = isOneOf(this.category, SELL, FORFREE)
         return [isRequired, "Set a date for the pet"]
       },
     },
@@ -65,6 +65,7 @@ const noticeSchema = new Schema(
     location: {
       type: String,
       minlength: 2,
+      match: cityRegex,
       required: function () {
         const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
         return [isRequired, "Set a location for the pet"]
@@ -112,7 +113,7 @@ const addNoticeSchema = Joi.object({
   date: Joi.string()
     .pattern(dateRegex)
     .when("category", {
-      is: Joi.valid(SELL, FORFREE, MYPET),
+      is: Joi.valid(SELL, FORFREE),
       then: Joi.required(),
     }),
   type: Joi.string().min(2).max(16).required(),
@@ -123,6 +124,7 @@ const addNoticeSchema = Joi.object({
       then: Joi.required(),
     }),
   location: Joi.string()
+    .min(2)
     .pattern(cityRegex)
     .when("category", {
       is: Joi.valid(SELL, LOSTFOUND, FORFREE),
@@ -140,7 +142,7 @@ const addNoticeSchema = Joi.object({
 const paramsNoticeSchema = Joi.object({
   page: Joi.number().min(0),
   limit: Joi.number().min(0),
-  category: Joi.string().valid(...Object.values(noticeCategories)),
+  category: Joi.string().valid(SELL, LOSTFOUND, FORFREE),
   gender: Joi.string().valid(...Object.values(noticeSexes)),
   date: Joi.string().valid(...Object.values(dateFilterOptions)),
   query: Joi.string().max(32),
