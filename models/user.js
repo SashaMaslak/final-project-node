@@ -3,7 +3,13 @@ const { Schema, model } = require("mongoose")
 const Joi = require("joi")
 
 const { handleMongooseError } = require("../helpers")
-const { dateRegex, emailRegex, pswRegex, phoneRegex } = require("../constants")
+const {
+  dateRegex,
+  emailRegex,
+  pswRegex,
+  phoneRegex,
+  cityRegex,
+} = require("../constants")
 
 const userSchema = new Schema(
   {
@@ -27,6 +33,8 @@ const userSchema = new Schema(
     },
     city: {
       type: String,
+      minlength: 2,
+      match: cityRegex,
       default: "",
     },
     phone: {
@@ -72,15 +80,15 @@ const emailSchema = Joi.object({
 
 const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegex).required(),
-  password: Joi.string().required(),
+  password: Joi.string().min(6).max(16).required(),
 })
 
 const updateSchema = Joi.object({
-  name: Joi.string().min(2).required(),
+  name: Joi.string().min(2).max(16).required(),
   email: Joi.string().pattern(emailRegex).required(),
   phone: Joi.string().pattern(phoneRegex),
   birthday: Joi.string().pattern(dateRegex),
-  city: Joi.string().min(2),
+  city: Joi.string().min(2).pattern(cityRegex),
 })
 
 const schemas = {
