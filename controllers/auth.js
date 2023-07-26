@@ -6,7 +6,12 @@ const { nanoid } = require("nanoid")
 require("dotenv").config()
 
 const { User } = require("../models/user.js")
-const { ctrlWrapper, HttpError, sendEmail } = require("../helpers/index.js")
+const {
+  ctrlWrapper,
+  HttpError,
+  sendEmail,
+  transformUser,
+} = require("../helpers/index.js")
 
 const { SECRET_KEY, BASE_URL_FRONTEND } = process.env
 
@@ -32,18 +37,7 @@ const register = async (req, res) => {
     html: `<a target="_blank" href="${BASE_URL_FRONTEND}/afterverify/${verificationToken}">HELLO my friend, Click for verify your email</a>`,
   }
   await sendEmail(verifyEmail)
-  res.status(201).json({
-    user: {
-      id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      city: newUser.city,
-      phone: newUser.phone,
-      favorites: newUser.favorites,
-      ownPets: newUser.ownPets,
-      avatar: newUser.avatar,
-    },
-  })
+  res.status(201).json({ message: "Email was sent successfully" })
 }
 
 const login = async (req, res) => {
@@ -63,19 +57,7 @@ const login = async (req, res) => {
   }
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
   await User.findByIdAndUpdate(user._id, { token })
-  res.json({
-    token,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      city: user.city,
-      phone: user.phone,
-      favorites: user.favorites,
-      ownPets: user.ownPets,
-      avatar: user.avatar,
-    },
-  })
+  res.json({ token, user: transformUser(user) })
 }
 
 const verifyEmail = async (req, res) => {
@@ -106,7 +88,7 @@ const resendVerifyEmail = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify Email",
-    html: `<a target="_blank" href="${BASE_URL_FRONTEND}/afterverify/${verificationToken}">Click verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL_FRONTEND}/afterverify/${user.verificationToken}">Click verify email</a>`,
   }
   await sendEmail(verifyEmail)
   res.json({ message: "Verify email send success" })
@@ -119,21 +101,7 @@ const logout = async (req, res) => {
 }
 
 const getCurrent = async (req, res) => {
-  const { _id, email, name, city, phone, favorites, ownPets, avatar, token } =
-    req.user
-
-  const user = {
-    id: _id,
-    name,
-    email,
-    city,
-    phone,
-    favorites,
-    ownPets,
-    avatar,
-  }
-
-  res.json({ token, user })
+  res.json({ token, user: transformUser(req.user) })
 }
 
 const getUserIdFromToken = authorizationHeader => {
@@ -162,18 +130,7 @@ const refreshToken = async (req, res) => {
     throw HttpError(500, "Server error")
   }
   await User.findByIdAndUpdate(user._id, { token })
-  res.json({
-    token,
-    user: {
-      email: user.email,
-      subscription: user.subscription,
-      avatar: user.avatarURL,
-      name: user.name,
-      surname: user.surname,
-      phone: user.phone,
-      country: user.country,
-    },
-  })
+  res.json({ token, user: transformUser(user) })
 }
 
 const updateUser = async (req, res) => {
@@ -181,7 +138,7 @@ const updateUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(_id, req.body, {
     new: true,
   })
-  res.json({ user })
+  res.json({ user: transformUser(user) })
 }
 
 const updateAvatar = async (req, res) => {
@@ -200,11 +157,11 @@ const updateAvatar = async (req, res) => {
 module.exports = {
   register: ctrlWrapper(register),
   verifyEmail: ctrlWrapper(verifyEmail),
+  resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   getCurrent: ctrlWrapper(getCurrent),
   refreshToken: ctrlWrapper(refreshToken),
   updateUser: ctrlWrapper(updateUser),
   updateAvatar: ctrlWrapper(updateAvatar),
-  resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
 }
