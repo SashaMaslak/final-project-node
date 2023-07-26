@@ -11,7 +11,7 @@ const {
   HttpError,
   sendEmail,
   transformUser,
-} = require("../helpers/index.js")
+} = require("../helpers")
 
 const { SECRET_KEY, BASE_URL_FRONTEND } = process.env
 
