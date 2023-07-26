@@ -103,7 +103,7 @@ const logout = async (req, res) => {
 }
 
 const getCurrent = async (req, res) => {
-  res.json({ token, user: transformUser(req.user) })
+  res.json({ token: req.user.token, user: transformUser(req.user) })
 }
 
 const getUserIdFromToken = authorizationHeader => {
