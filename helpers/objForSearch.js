@@ -35,20 +35,27 @@ const filterAge = option => {
   }
 }
 
+const filterByKeyword = keyword => {
+  return [
+    { title: { $regex: new RegExp(keyword), $options: "i" } },
+    { name: { $regex: new RegExp(keyword), $options: "i" } },
+    { type: { $regex: new RegExp(keyword), $options: "i" } },
+  ]
+}
+
 const objForSearch = obj => {
   const newObj = {}
   for (const key in obj) {
     if (obj[key]) {
-      if (key === "query") {
-        newObj["$or"] = [
-          { title: { $regex: new RegExp(obj[key]), $options: "i" } },
-          { name: { $regex: new RegExp(obj[key]), $options: "i" } },
-          { type: { $regex: new RegExp(obj[key]), $options: "i" } },
-        ]
-      } else if (key === "date") {
-        newObj["date"] = filterAge(obj[key])
-      } else {
-        newObj[key] = obj[key]
+      switch (key) {
+        case "query":
+          newObj["$or"] = filterByKeyword(obj[key])
+          break
+        case "date":
+          newObj["date"] = filterAge(obj[key])
+          break
+        default:
+          newObj[key] = obj[key]
       }
     }
   }
