@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.38.0",
     "cors": "2.8.5",
@@ -29,7 +30,9 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nanoid": "^3.3.4",
     "nodemailer": "^6.9.3",
-    "swagger-ui-express": "^5.0.0"
+    "query-string": "^8.1.0",
+    "swagger-ui-express": "^5.0.0",
+    "url": "^0.11.1"
   },
   "devDependencies": {
     "eslint": "7.19.0",
