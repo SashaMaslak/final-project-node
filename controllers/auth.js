@@ -13,9 +13,8 @@ const {
   transformUser,
 } = require("../helpers")
 
-const { SECRET_KEY, BASE_URL_FRONTEND } = process.env
-const BASE_URL_FRONTEND =
-  NODE_ENV === "production" ? BASE_URL_FRONTEND_PROD : BASE_URL_FRONTEND_DEV
+const { SECRET_KEY } = process.env
+const { BASE_URL_FRONTEND } = getEnv()
 
 const register = async (req, res) => {
   const { email, password } = req.body

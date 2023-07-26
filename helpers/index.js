@@ -5,6 +5,7 @@ const sendEmail = require("./sendEmail")
 const isOneOf = require("./isOneOf")
 const objForSearch = require("./objForSearch")
 const { transformNotice, transformUser } = require("./transformFuncs")
+const getEnv = require("./getEnv")
 
 module.exports = {
   HttpError,
@@ -15,4 +16,5 @@ module.exports = {
   objForSearch,
   transformNotice,
   transformUser,
+  getEnv,
 }
