@@ -26,15 +26,20 @@ const getAll = async (req, res) => {
   res.json({ notices: result.map(transformNotice) })
 }
 
-const getFavorites = async (req, res) => {
-  clg
-  const { favorites } = await req.user.populate("favorites")
-  res.json({ favorites: favorites.map(transformNotice) })
-}
-
 const getMyPets = async (req, res) => {
   const user = await req.user.populate("ownPets")
   res.json({ notices: user.ownPets.map(transformNotice) })
+}
+
+const getFavoriteAds = async (req, res) => {
+  const { favorites } = await req.user.populate("favorites")
+  res.json({ notices: favorites.map(transformNotice) })
+}
+
+const getMyAds = async (req, res) => {
+  const { _id: owner } = req.user
+  const result = await Notice.find({ owner })
+  res.json({ notices: result.map(transformNotice) })
 }
 
 const getById = async (req, res) => {
@@ -110,8 +115,9 @@ const toggleNoticeFavorite = async (req, res) => {
 
 module.exports = {
   getAll: ctrlWrapper(getAll),
-  getFavorites: ctrlWrapper(getFavorites),
   getMyPets: ctrlWrapper(getMyPets),
+  getFavoriteAds: ctrlWrapper(getFavoriteAds),
+  getMyAds: ctrlWrapper(getMyAds),
   getById: ctrlWrapper(getById),
   add: ctrlWrapper(add),
   deleteById: ctrlWrapper(deleteById),

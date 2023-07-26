@@ -13,9 +13,11 @@ const router = express.Router()
 
 router.get("/", validateParams(schemas.paramsNoticeSchema), ctrl.getAll)
 
-router.get("/favorite", authenticate, ctrl.getFavorites)
-
 router.get("/mypets", authenticate, ctrl.getMyPets)
+
+router.get("/favoriteads", authenticate, ctrl.getFavoriteAds)
+
+router.get("/myads", authenticate, ctrl.getMyAds)
 
 router.get("/:noticeId", isValidId, ctrl.getById)
 
