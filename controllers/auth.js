@@ -106,6 +106,35 @@ const getCurrent = async (req, res) => {
   res.json({ token: req.user.token, user: transformUser(req.user) })
 }
 
+const getUserIdFromToken = authorizationHeader => {
+  const token = authorizationHeader.split(" ")[1]
+  const decodedToken = jwt.verify(token, SECRET_KEY)
+  return decodedToken.id
+}
+
+const refreshToken = async (req, res) => {
+  const authorizationHeader = req.headers.authorization
+  if (!authorizationHeader) {
+    throw HttpError(401, "Authorization header missing")
+  }
+  const userId = getUserIdFromToken(authorizationHeader)
+  const user = await User.findOne({ _id: userId })
+  if (!user) {
+    throw HttpError(401, "Invalid token")
+  }
+  try {
+    const payload = { id: user._id }
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
+  } catch (error) {
+    if (error.message === "jwt expired") {
+      throw HttpError(400, "Invalid Token")
+    }
+    throw HttpError(500, "Server error")
+  }
+  await User.findByIdAndUpdate(user._id, { token })
+  res.json({ token, user: transformUser(user) })
+}
+
 const updateUser = async (req, res) => {
   const { _id } = req.user
   const user = await User.findByIdAndUpdate(_id, req.body, {
