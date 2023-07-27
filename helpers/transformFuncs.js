@@ -35,7 +35,7 @@ const calcAge = dateStr => {
   if (monthDiff === 0) {
     const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0)
     dayDiff = dayDiff < 0 ? prevMonth.getDate() + dayDiff : dayDiff
-    age = dayDiff === 1 ? "1 day" : `${dayDiff} day`
+    age = dayDiff === 1 ? "1 day" : `${dayDiff} days`
   }
 
   return age
