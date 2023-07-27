@@ -20,8 +20,16 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    if (file.fieldname !== "avatar") {
-      return null
+    let folder
+    switch (file.fieldname) {
+      case "avatar":
+        folder = "avatars"
+        break
+      case "file":
+        folder = "pets"
+        break
+      default:
+        folder = null
     }
 
     return {

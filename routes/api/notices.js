@@ -24,7 +24,7 @@ router.get("/:noticeId", isValidId, ctrl.getById)
 router.post(
   "/",
   authenticate,
-  uploadFile.single("avatar"),
+  uploadFile.single("file"),
   validateBody(schemas.addNoticeSchema),
   ctrl.add
 )

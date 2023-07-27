@@ -1562,7 +1562,7 @@
             "example": "Siamese",
             "description": "Лише літери, без цифер"
           },
-          "avatar": {
+          "file": {
             "type": "string",
             "format": "binary",
             "description": "Аватарка в форматі файлу .jpg .png"
