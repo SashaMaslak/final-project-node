@@ -9,6 +9,7 @@ const {
   objForSearch,
   transformNotice,
   transformDate,
+  transformMinifiedNotice,
 } = require("../helpers")
 const { noticeCategories } = require("../constants")
 

@@ -11,29 +11,31 @@ const calcAge = dateStr => {
   const date = new Date(dateStr)
   const today = new Date()
 
-  const yearDiff = today.getFullYear() - date.getFullYear()
-  const monthDiff = today.getMonth() - date.getMonth()
-  const dayDiff = today.getDate() - date.getDate()
+  let yearDiff = today.getFullYear() - date.getFullYear()
+  let monthDiff = today.getMonth() - date.getMonth()
+  let dayDiff = today.getDate() - date.getDate()
 
   if (yearDiff === 0 && monthDiff === 0 && dayDiff === 0) {
     return "today"
   }
 
-  let age = `${yearDiff} years`
+  let age
+
   if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-    age = `${yearDiff - 1} years`
+    yearDiff -= 1
+    age = yearDiff === 1 ? "1 year" : `${yearDiff} years`
   }
 
-  if (age === "1 years") {
-    age = "1 year"
-  } else if (age === "0 years") {
-    age = dayDiff < 0 ? `${monthDiff - 1} months` : `${monthDiff} months`
-    age = age === "1 months" ? "1 month" : age
+  if (yearDiff === 0) {
+    monthDiff = monthDiff < 0 ? 12 + monthDiff : monthDiff
+    monthDiff = dayDiff < 0 ? monthDiff - 1 : monthDiff
+    age = monthDiff === 1 ? "1 month" : `${monthDiff} months`
   }
 
-  if (age === "0 months") {
-    age = `${dayDiff} days`
-    age = age === "1 days" ? "1 day" : age
+  if (monthDiff === 0) {
+    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0)
+    dayDiff = dayDiff < 0 ? prevMonth.getDate() + dayDiff : dayDiff
+    age = dayDiff === 1 ? "1 day" : `${dayDiff} day`
   }
 
   return age
@@ -47,7 +49,7 @@ const transformDate = dateStr => {
   return dateArr.join("-")
 }
 
-const transformMinifiedNotice = () => {
+const transformMinifiedNotice = obj => {
   const result = {
     id: obj._id,
     category: obj.category,
