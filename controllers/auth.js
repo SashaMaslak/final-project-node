@@ -163,7 +163,6 @@ module.exports = {
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   getCurrent: ctrlWrapper(getCurrent),
-  refreshToken: ctrlWrapper(refreshToken),
   updateUser: ctrlWrapper(updateUser),
   updateAvatar: ctrlWrapper(updateAvatar),
 }
