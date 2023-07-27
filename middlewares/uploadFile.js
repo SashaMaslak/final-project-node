@@ -29,7 +29,7 @@ const storage = new CloudinaryStorage({
         folder = "pets"
         break
       default:
-        folder = null
+        throw newError("Only file and avatars fields exist")
     }
 
     return {
