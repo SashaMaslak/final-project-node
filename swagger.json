@@ -873,7 +873,7 @@
                     "notices": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/NoticeMinifyResponse"
+                        "$ref": "#/components/schemas/NoticeResponse"
                       }
                     }
                   }
