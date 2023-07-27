@@ -40,7 +40,7 @@ const getFavoriteAds = async (req, res) => {
 const getMyAds = async (req, res) => {
   const { _id: owner } = req.user
   const result = await Notice.find({ owner })
-  res.json({ notices: result.map(transformMinifiedNotice) })
+  res.json({ notices: result.map(transformNotice) })
 }
 
 const getById = async (req, res) => {
