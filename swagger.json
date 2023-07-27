@@ -1550,9 +1550,8 @@
           "date": {
             "type": "string",
             "format": "date",
-            "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
-            "example": "23-07-2023",
-            "description": "Дата в форматі DD-MM-YYYY, обов'язкове для  sell, for-free"
+            "example": "2023-07-27T00:00:00.00Z",
+            "description": "Дата в форматі new Date() '2023-07-23T00:00:00.000Z', обов'язкове для  sell, for-free"
           },
           "type": {
             "type": "string",

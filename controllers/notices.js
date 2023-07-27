@@ -8,7 +8,6 @@ const {
   HttpError,
   objForSearch,
   transformNotice,
-  transformDate,
   transformMinifiedNotice,
 } = require("../helpers")
 const { noticeCategories } = require("../constants")
@@ -61,7 +60,7 @@ const add = async (req, res) => {
   const { path: file } = req.file
   const result = await Notice.create({
     ...req.body,
-    date: moment(transformDate(req.body.date)),
+    date: moment(req.body.date),
     file,
     owner,
   })

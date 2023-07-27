@@ -5,7 +5,6 @@ const sendEmail = require("./sendEmail")
 const isOneOf = require("./isOneOf")
 const objForSearch = require("./objForSearch")
 const {
-  transformDate,
   transformMinifiedNotice,
   transformNotice,
   transformUser,
@@ -19,7 +18,6 @@ module.exports = {
   sendEmail,
   isOneOf,
   objForSearch,
-  transformDate,
   transformMinifiedNotice,
   transformNotice,
   transformUser,

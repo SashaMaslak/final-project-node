@@ -26,7 +26,7 @@ const noticeSchema = new Schema(
       maxlength: 32,
       required: function () {
         const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
-        return [isRequired, "Set a title for the pet"]
+        return isRequired
       },
     },
     name: {
@@ -40,7 +40,7 @@ const noticeSchema = new Schema(
       type: Date,
       required: function () {
         const isRequired = isOneOf(this.category, SELL, FORFREE)
-        return [isRequired, "Set a date for the pet"]
+        return isRequired
       },
     },
     type: {
@@ -59,7 +59,7 @@ const noticeSchema = new Schema(
       enum: Object.values(noticeSexes),
       required: function () {
         const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
-        return [isRequired, "Set a sex for the pet"]
+        return isRequired
       },
     },
     location: {
@@ -68,7 +68,7 @@ const noticeSchema = new Schema(
       match: cityRegex,
       required: function () {
         const isRequired = isOneOf(this.category, SELL, LOSTFOUND, FORFREE)
-        return [isRequired, "Set a location for the pet"]
+        return isRequired
       },
     },
     price: {
@@ -76,7 +76,7 @@ const noticeSchema = new Schema(
       min: 1,
       required: function () {
         const isRequired = isOneOf(this.category, SELL)
-        return [isRequired, "Set a price for the pet"]
+        return isRequired
       },
     },
     comments: {
@@ -98,6 +98,7 @@ noticeSchema.post("save", handleMongooseError)
 /**
  * Схеми Joi (addNoticeSchema)
  */
+
 const addNoticeSchema = Joi.object({
   category: Joi.string()
     .valid(...Object.values(noticeCategories))
@@ -110,8 +111,8 @@ const addNoticeSchema = Joi.object({
       then: Joi.required(),
     }),
   name: Joi.string().min(2).max(16).required(),
-  date: Joi.string()
-    .pattern(dateRegex)
+  date: Joi.date()
+    .max("now")
     .when("category", {
       is: Joi.valid(SELL, FORFREE),
       then: Joi.required(),

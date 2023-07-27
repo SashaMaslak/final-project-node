@@ -41,14 +41,6 @@ const calcAge = dateStr => {
   return age
 }
 
-const transformDate = dateStr => {
-  const dateArr = dateStr.split("-")
-  const tmp = dateArr[0]
-  dateArr[0] = dateArr[2]
-  dateArr[2] = tmp
-  return dateArr.join("-")
-}
-
 const transformMinifiedNotice = obj => {
   const result = {
     id: obj._id,
@@ -110,7 +102,6 @@ const transformUser = obj => {
 }
 
 module.exports = {
-  transformDate,
   transformMinifiedNotice,
   transformNotice,
   transformUser,
