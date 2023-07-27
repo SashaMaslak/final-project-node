@@ -29,7 +29,7 @@ const getAll = async (req, res) => {
 
 const getMyPets = async (req, res) => {
   const user = await req.user.populate("ownPets")
-  res.json({ notices: user.ownPets.map(transformMinifiedNotice) })
+  res.json({ notices: user.ownPets.map(transformNotice) })
 }
 
 const getFavoriteAds = async (req, res) => {
