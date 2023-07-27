@@ -14,7 +14,7 @@ const { noticeCategories } = require("../constants")
 const getAll = async (req, res) => {
   const {
     page = 1,
-    limit = 10,
+    limit = 36,
     category = "",
     sex = "",
     date = "",
