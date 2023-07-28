@@ -4,7 +4,11 @@ const handleMongooseError = require("./handleMongooseError")
 const sendEmail = require("./sendEmail")
 const isOneOf = require("./isOneOf")
 const objForSearch = require("./objForSearch")
-const { transformNotice, transformUser } = require("./transformFuncs")
+const {
+  transformMinifiedNotice,
+  transformNotice,
+  transformUser,
+} = require("./transformFuncs")
 const getEnv = require("./getEnv")
 
 module.exports = {
@@ -14,6 +18,7 @@ module.exports = {
   sendEmail,
   isOneOf,
   objForSearch,
+  transformMinifiedNotice,
   transformNotice,
   transformUser,
   getEnv,

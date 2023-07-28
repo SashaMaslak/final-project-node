@@ -44,6 +44,7 @@ const userSchema = new Schema(
     birthday: {
       type: String,
       match: dateRegex,
+      default: "",
     },
     favorites: [{ type: Schema.Types.ObjectId, ref: "notice" }],
     ownPets: [{ type: Schema.Types.ObjectId, ref: "notice" }],
