@@ -82,20 +82,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -123,10 +110,10 @@
                   "type": "object",
                   "properties": {
                     "token": {
-                      "$ref": "#/components/schemas/TokenResponse"
+                      "$ref": "#/components/responses/TokenResponse"
                     },
                     "user": {
-                      "$ref": "#/components/schemas/UserResponse"
+                      "$ref": "#/components/responses/UserResponse"
                     }
                   }
                 }
@@ -166,20 +153,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -198,10 +172,10 @@
                   "type": "object",
                   "properties": {
                     "token": {
-                      "$ref": "#/components/schemas/TokenResponse"
+                      "$ref": "#/components/responses/TokenResponse"
                     },
                     "user": {
-                      "$ref": "#/components/schemas/UserResponse"
+                      "$ref": "#/components/responses/UserResponse"
                     }
                   }
                 }
@@ -209,36 +183,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -266,36 +214,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -321,7 +243,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AvatarResponse"
+                  "$ref": "#/components/responses/AvatarResponse"
                 }
               }
             }
@@ -343,36 +265,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -401,7 +297,7 @@
                   "type": "object",
                   "properties": {
                     "user": {
-                      "$ref": "#/components/schemas/UserResponse"
+                      "$ref": "#/components/responses/UserResponse"
                     }
                   }
                 }
@@ -425,36 +321,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -482,7 +352,7 @@
                   "type": "object",
                   "properties": {
                     "token": {
-                      "$ref": "#/components/schemas/TokenResponse"
+                      "$ref": "#/components/responses/TokenResponse"
                     }
                   }
                 }
@@ -506,20 +376,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -604,20 +461,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -658,20 +502,7 @@
             "description": "Перенаправлено на Фронтенд з параметрами ? email = & name = ..."
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -679,53 +510,18 @@
     "/notices": {
       "get": {
         "tags": ["Notice"],
-        "description": "Отримати 10 з пагінацією з фільтрами та піошуком (Публічний)",
+        "description": "Отримати 12 з пагінацією з фільтрами та піошуком (Публічний)",
         "parameters": [
-          {
-            "name": "category",
-            "in": "query",
-            "type": "string",
-            "enum": ["sell", "lost-found", "for-free"],
-            "example": "sell"
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "type": "string",
-            "enum": ["3-12m", "1y", "2y"],
-            "example": "3-12m"
-          },
-          {
-            "name": "sex",
-            "in": "query",
-            "type": "string",
-            "enum": ["female", "male"],
-            "example": "female"
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "type": "string",
-            "example": "cat"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "type": "integer",
-            "default": 1,
-            "example": 2
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "integer",
-            "default": 10,
-            "example": 10
-          }
+          { "$ref": "#/components/parameters/category" },
+          { "$ref": "#/components/parameters/date" },
+          { "$ref": "#/components/parameters/sex" },
+          { "$ref": "#/components/parameters/query" },
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/limit" }
         ],
         "responses": {
           "200": {
-            "description": "Успіх, отримано 10, або менше notices",
+            "description": "Успіх, отримано 12, або менше notices",
             "content": {
               "application/json": {
                 "schema": {
@@ -734,7 +530,7 @@
                     "notices": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/NoticeMinifyResponse"
+                        "$ref": "#/components/responses/NoticeMinifyResponse"
                       }
                     }
                   }
@@ -759,20 +555,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       },
@@ -799,7 +582,7 @@
                   "type": "object",
                   "properties": {
                     "notice": {
-                      "$ref": "#/components/schemas/NoticeResponse"
+                      "$ref": "#/components/responses/NoticeResponse"
                     }
                   }
                 }
@@ -823,36 +606,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -862,6 +619,10 @@
         "tags": ["Notice"],
         "security": [{ "BearerToken": [] }],
         "description": "Отримати масив лише категорії своїх my-pets (Приватний)",
+        "parameters": [
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/limit" }
+        ],
         "responses": {
           "200": {
             "description": "Успіх, отримано масив всіх свої публікації категорії my-pets",
@@ -873,7 +634,7 @@
                     "notices": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/NoticeResponse"
+                        "$ref": "#/components/responses/NoticeResponse"
                       }
                     }
                   }
@@ -882,36 +643,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -921,6 +656,10 @@
         "tags": ["Notice"],
         "security": [{ "BearerToken": [] }],
         "description": "Отримати масив улюблених pets-ів (доданих в favorite) (Приватний)",
+        "parameters": [
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/limit" }
+        ],
         "responses": {
           "200": {
             "description": "Успіх, отримано масив улюблених",
@@ -932,7 +671,7 @@
                     "favorites": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/NoticeMinifyResponse"
+                        "$ref": "#/components/responses/NoticeMinifyResponse"
                       }
                     }
                   }
@@ -941,36 +680,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -983,6 +696,10 @@
         "responses": {
           "200": {
             "description": "Успіх, отримано масив усіх своїх публікацій",
+            "parameters": [
+              { "$ref": "#/components/parameters/page" },
+              { "$ref": "#/components/parameters/limit" }
+            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -991,7 +708,7 @@
                     "notices": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/NoticeMinifyResponse"
+                        "$ref": "#/components/responses/NoticeMinifyResponse"
                       }
                     }
                   }
@@ -1000,36 +717,10 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -1057,7 +748,7 @@
                   "type": "object",
                   "properties": {
                     "notice": {
-                      "$ref": "#/components/schemas/NoticeResponse"
+                      "$ref": "#/components/responses/NoticeResponse"
                     }
                   }
                 }
@@ -1097,20 +788,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       },
@@ -1146,20 +824,7 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "403": {
             "description": "Той хто видаляє публікацію, не є його власник",
@@ -1194,20 +859,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -1265,20 +917,7 @@
             }
           },
           "401": {
-            "description": "Неавторизований користувач (JWT token відсутній)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Not authorized"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotAuthorized"
           },
           "404": {
             "description": "Не знайдено notice за даним id",
@@ -1297,20 +936,7 @@
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -1325,26 +951,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SponsorsRespons"
+                  "$ref": "#/components/responses/SponsorsRespons"
                 }
               }
             }
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -1476,52 +1089,6 @@
           }
         }
       },
-      "UserResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": "64baea04ba92a3f0060ba5b7"
-          },
-          "name": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 16,
-            "example": "John"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
-            "example": "johnnattas1987@gmail.com",
-            "description": "спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери"
-          },
-          "city": {
-            "type": "string",
-            "minLength": 2,
-            "pattern": "^[a-zA-Z]+$",
-            "example": "Kyiv",
-            "description": "Лише літери, без цифер та без пробілу мін 2"
-          },
-          "phone": {
-            "type": "string",
-            "pattern": "^\\+\\d{12}$",
-            "example": "+380984739205",
-            "description": "Починається з +, лише 12 цифер, без пробілів, та без букв"
-          },
-          "birthday": {
-            "type": "string",
-            "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
-            "example": "18-08-1987",
-            "description": "Date of birth in the format DD-MM-YYYY"
-          },
-          "avatar": {
-            "type": "string",
-            "example": "https://res.cloudinary.com/dsn4linai/image/upload/v1690095165/fqwwamguzqrsuis7bm1m.png"
-          }
-        }
-      },
       "addNoticeSchema": {
         "type": "object",
         "properties": {
@@ -1594,7 +1161,60 @@
             "description": "Необов'язкове за замовчуанням ''"
           }
         }
+      }
+    },
+
+    "parameters": {
+      "cateory": {
+        "name": "category",
+        "in": "query",
+        "type": "string",
+        "enum": ["sell", "lost-found", "for-free"],
+        "example": "sell",
+        "description": "Для видачі pets-ів за категорією один з 'sell', 'lost-found', 'for-free'"
       },
+      "date": {
+        "name": "date",
+        "in": "query",
+        "type": "string",
+        "enum": ["3-12m", "1y", "2y"],
+        "example": "3-12m",
+        "description": "Для фільтру по даті один з '3-12m', '1y', '2y'"
+      },
+      "sex": {
+        "name": "sex",
+        "in": "query",
+        "type": "string",
+        "enum": ["female", "male"],
+        "example": "female",
+        "description": "Для фільтру по статі один з 'female', 'male'"
+      },
+      "query": {
+        "name": "query",
+        "in": "query",
+        "type": "string",
+        "example": "cat",
+        "description": "Для пошуку по ключовому слову"
+      },
+      "page": {
+        "name": "page",
+        "in": "query",
+        "type": "integer",
+        "default": 1,
+        "example": 2,
+        "description": "Сторінка елементів (пагінація)"
+      },
+      "limit": {
+        "name": "limit",
+        "in": "query",
+        "type": "integer",
+        "default": 12,
+        "example": 12,
+        "description": "Кількість елементів які повинні повернутись (пагінація)"
+      }
+    },
+
+    "responses": {
       "NoticeResponse": {
         "type": "object",
         "properties": {
@@ -1706,6 +1326,52 @@
           }
         }
       },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": "64baea04ba92a3f0060ba5b7"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16,
+            "example": "John"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
+            "example": "johnnattas1987@gmail.com",
+            "description": "спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери"
+          },
+          "city": {
+            "type": "string",
+            "minLength": 2,
+            "pattern": "^[a-zA-Z]+$",
+            "example": "Kyiv",
+            "description": "Лише літери, без цифер та без пробілу мін 2"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^\\+\\d{12}$",
+            "example": "+380984739205",
+            "description": "Починається з +, лише 12 цифер, без пробілів, та без букв"
+          },
+          "birthday": {
+            "type": "string",
+            "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+            "example": "18-08-1987",
+            "description": "Date of birth in the format DD-MM-YYYY"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dsn4linai/image/upload/v1690095165/fqwwamguzqrsuis7bm1m.png"
+          }
+        }
+      },
       "TokenResponse": {
         "type": "string",
         "example": "eyJhbGciOiJIUzI1NiIskpXVCJ9.eyJpZCI6IjY0YmFlYTyNzE1NywiZXhwIjoxNjkwMjA5OTU3fQ.RzBsRvQx58EfTsWBAU2kRzT-AXVcXaQ"
@@ -1782,6 +1448,38 @@
               "type": "string",
               "nullable": true,
               "example": null
+            }
+          }
+        }
+      },
+      "NotAuthorized": {
+        "description": "Неавторизований користувач (JWT token відсутній)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Not authorized"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Помилка сервера",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Server error"
+                }
+              }
             }
           }
         }

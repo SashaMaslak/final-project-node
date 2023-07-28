@@ -16,7 +16,7 @@ const { noticeCategories } = require("../constants")
 const getAll = async (req, res) => {
   const {
     page = 1,
-    limit = 36,
+    limit = 12,
     category = "",
     sex = "",
     date = "",
@@ -29,18 +29,32 @@ const getAll = async (req, res) => {
 }
 
 const getMyPets = async (req, res) => {
-  const user = await req.user.populate("ownPets")
+  const { page = 1, limit = 12 } = req.query
+  const skip = (page - 1) * limit
+  const user = await req.user.populate([
+    {
+      path: "ownPets",
+      options: { skip, limit },
+    },
+  ])
   res.json({ notices: user.ownPets.map(transformNotice) })
 }
 
 const getFavoriteAds = async (req, res) => {
-  const { favorites } = await req.user.populate("favorites")
+  const { page = 1, limit = 12 } = req.query
+  const skip = (page - 1) * limit
+  const { favorites } = await req.user.populate({
+    path: "favorites",
+    options: { skip, limit },
+  })
   res.json({ notices: favorites.map(transformMinifiedNotice) })
 }
 
 const getMyAds = async (req, res) => {
   const { _id: owner } = req.user
-  const result = await Notice.find({ owner })
+  const { page = 1, limit = 12 } = req.query
+  const skip = (page - 1) * limit
+  const result = await Notice.find({ owner }, "", { skip, limit })
   res.json({ notices: result.map(transformNotice) })
 }
 
