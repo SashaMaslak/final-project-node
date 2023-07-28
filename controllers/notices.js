@@ -12,6 +12,7 @@ const {
 } = require("../helpers")
 const { noticeCategories } = require("../constants")
 
+//get all and get for params
 const getAll = async (req, res) => {
   const {
     page = 1,
