@@ -142,16 +142,22 @@ const addNoticeSchema = Joi.object({
 
 const paramsNoticeSchema = Joi.object({
   page: Joi.number().min(0),
-  limit: Joi.number().min(0).max(20),
+  limit: Joi.number().min(0).max(36),
   category: Joi.string().valid(SELL, LOSTFOUND, FORFREE),
   gender: Joi.string().valid(...Object.values(noticeSexes)),
   date: Joi.string().valid(...Object.values(dateFilterOptions)),
   query: Joi.string().max(32),
 })
 
+const paramsPaginationSchema = Joi.object({
+  page: Joi.number().min(0),
+  limit: Joi.number().min(0).max(36),
+})
+
 const schemas = {
   addNoticeSchema,
   paramsNoticeSchema,
+  paramsPaginationSchema,
 }
 
 const Notice = model("notice", noticeSchema)

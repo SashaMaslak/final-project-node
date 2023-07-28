@@ -101,8 +101,13 @@ const transformUser = obj => {
   }
 }
 
+const transformNoticeExtended = obj => {
+  return { ...transformNotice(obj), owner: transformUser(obj.owner) }
+}
+
 module.exports = {
   transformMinifiedNotice,
   transformNotice,
+  transformNoticeExtended,
   transformUser,
 }

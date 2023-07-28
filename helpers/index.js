@@ -7,6 +7,7 @@ const objForSearch = require("./objForSearch")
 const {
   transformMinifiedNotice,
   transformNotice,
+  transformNoticeExtended,
   transformUser,
 } = require("./transformFuncs")
 const getEnv = require("./getEnv")
@@ -20,6 +21,7 @@ module.exports = {
   objForSearch,
   transformMinifiedNotice,
   transformNotice,
+  transformNoticeExtended,
   transformUser,
   getEnv,
 }
