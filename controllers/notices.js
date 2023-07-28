@@ -9,6 +9,7 @@ const {
   objForSearch,
   transformNotice,
   transformMinifiedNotice,
+  transformNoticeExtended,
 } = require("../helpers")
 const { noticeCategories } = require("../constants")
 
@@ -60,11 +61,11 @@ const getMyAds = async (req, res) => {
 
 const getById = async (req, res) => {
   const { noticeId } = req.params
-  const result = await Notice.findById(noticeId)
+  const result = await Notice.findById(noticeId).populate("owner")
   if (!result) {
     throw HttpError(404, "Notice not found")
   }
-  res.json({ notice: transformNotice(result) })
+  res.json({ notice: transformNoticeExtended(result) })
 }
 
 const add = async (req, res) => {
@@ -125,7 +126,7 @@ const toggleNoticeFavorite = async (req, res) => {
       [action]: { favorites: new Types.ObjectId(noticeId) },
     },
     { new: true }
-  ).populate("favorites")
+  )
   res.json({
     message: isInFavorites
       ? "Deleted from favorites successfully"
