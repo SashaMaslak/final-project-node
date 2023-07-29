@@ -46,6 +46,7 @@ const transformMinifiedNotice = obj => {
     id: obj._id,
     category: obj.category,
     file: obj.file,
+    owner: obj.owner,
   }
   if (obj.title) {
     result.title = obj.title
@@ -98,6 +99,7 @@ const transformUser = obj => {
     phone: obj.phone,
     birthday: obj.birthday,
     avatar: obj.avatar,
+    favorites: obj.favorites,
   }
 }
 
