@@ -89,7 +89,7 @@ const add = async (req, res) => {
 const deleteById = async (req, res) => {
   const { noticeId } = req.params
   const notice = await Notice.findById(noticeId)
-  if (!notice._id) {
+  if (!notice) {
     throw HttpError(404, "Not found")
   }
   // Якщо власник notice не той що видаляє
@@ -98,7 +98,7 @@ const deleteById = async (req, res) => {
   }
   await User.updateMany(
     { favorites: notice._id },
-    { $pull: { favorites: _id } }
+    { $pull: { favorites: notice._id } }
   )
   // Лише якщо це категорія MYPET тоді видаляємо
   // використуючи notice.owner , це ефективніше
