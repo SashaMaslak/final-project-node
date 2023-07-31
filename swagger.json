@@ -223,7 +223,7 @@
       }
     },
     "/users/avatar": {
-      "patch": {
+      "put": {
         "tags": ["User"],
         "security": [{ "BearerToken": [] }],
         "description": "Змінити аватар (Приватний)",

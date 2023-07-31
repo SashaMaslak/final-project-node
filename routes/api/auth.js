@@ -28,7 +28,7 @@ router.put(
   ctrl.updateUser
 )
 
-router.patch(
+router.put(
   "/avatar",
   authenticate,
   uploadFile.single("avatar"),
