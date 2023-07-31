@@ -20,12 +20,16 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
+    console.log("STORAGE")
+
     let folder
     switch (file.fieldname) {
       case "avatar":
+        public_id = req.user._id
         folder = "avatars"
         break
       case "file":
+        public_id = nanoid()
         folder = "pets"
         break
       default:
@@ -33,13 +37,10 @@ const storage = new CloudinaryStorage({
     }
 
     return {
-      folder: "avatars",
+      folder,
       allowed_formats: ["jpg", "png"],
-      public_id: nanoid(),
-      transformation: [
-        { width: 350, height: 350 },
-        { width: 700, height: 700 },
-      ],
+      public_id,
+      transformation: [{ width: 350, height: 350 }],
     }
   },
 })

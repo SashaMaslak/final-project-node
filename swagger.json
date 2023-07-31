@@ -1037,7 +1037,7 @@
           }
         }
       },
-      "udateSchema": {
+      "updateSchema": {
         "type": "object",
         "properties": {
           "name": {

@@ -141,6 +141,9 @@ const updateUser = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user
+  if (!req.file) {
+    throw HttpError(400, 'Image field required')
+  }
   const { path: avatar } = req.file
   const result = await User.findByIdAndUpdate(
     _id,
