@@ -1,7 +1,5 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-const gravatar = require("gravatar")
-const path = require("path")
 const { nanoid } = require("nanoid")
 require("dotenv").config()
 
@@ -24,12 +22,10 @@ const register = async (req, res) => {
     throw HttpError(409, "Email already in use")
   }
   const hashPassword = await bcrypt.hash(password, 10)
-  const avatar = gravatar.url(email)
   const verificationToken = nanoid()
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatar,
     verificationToken,
     verify: false,
   })
