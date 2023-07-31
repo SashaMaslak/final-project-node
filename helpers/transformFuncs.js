@@ -71,6 +71,7 @@ const transformNotice = obj => {
     type: obj.type,
     file: obj.file,
     comments: obj.comments,
+    owner: obj.owner,
   }
   if (obj.title) {
     result.title = obj.title
