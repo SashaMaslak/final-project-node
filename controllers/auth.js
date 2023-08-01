@@ -72,7 +72,7 @@ const verifyEmail = async (req, res) => {
   })
   const payload = { id: user._id }
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
-  res.json({ token })
+  res.json({ token, user: transformUser(user) })
 }
 
 const resendVerifyEmail = async (req, res) => {
@@ -142,7 +142,7 @@ const updateUser = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user
   if (!req.file) {
-    throw HttpError(400, 'Image field required')
+    throw HttpError(400, "Image field required")
   }
   const { path: avatar } = req.file
   const result = await User.findByIdAndUpdate(
