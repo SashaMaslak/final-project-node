@@ -101,6 +101,7 @@ const transformUser = obj => {
     phone: obj.phone,
     birthday: obj.birthday,
     avatar: obj.avatar,
+    favorites: obj.favorites,
   }
 }
 
