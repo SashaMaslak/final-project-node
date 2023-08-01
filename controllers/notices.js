@@ -25,8 +25,9 @@ const getAll = async (req, res) => {
   } = req.query
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
-  const result = await await Notice.find(findObject, "", { skip, limit })
-  res.json({ notices: result.map(transformMinifiedNotice) })
+  const result = await Notice.find(findObject, "", { skip, limit })
+  const totalResult = await Notice.find(findObject, "")
+  res.json({ totalResult: totalResult.length, notices: result.map(transformMinifiedNotice) })
 }
 
 const getMyPets = async (req, res) => {
@@ -38,7 +39,7 @@ const getMyPets = async (req, res) => {
       options: { skip, limit },
     },
   ])
-  res.json({ notices: user.ownPets.map(transformNotice) })
+  res.json({ totalResult: user.ownPets.length, notices: user.ownPets.map(transformNotice) })
 }
 
 const getFavoriteAds = async (req, res) => {
@@ -48,7 +49,7 @@ const getFavoriteAds = async (req, res) => {
     path: "favorites",
     options: { skip, limit },
   })
-  res.json({ notices: favorites.map(transformMinifiedNotice) })
+  res.json({ totalResult: favorites.length, notices: favorites.map(transformMinifiedNotice) })
 }
 
 const getMyAds = async (req, res) => {
@@ -56,7 +57,7 @@ const getMyAds = async (req, res) => {
   const { page = 1, limit = 12 } = req.query
   const skip = (page - 1) * limit
   const result = await Notice.find({ owner }, "", { skip, limit })
-  res.json({ notices: result.map(transformNotice) })
+  res.json({ totalResult: result.length, notices: result.map(transformNotice) })
 }
 
 const getById = async (req, res) => {
