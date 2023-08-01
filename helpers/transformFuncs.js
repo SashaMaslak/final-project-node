@@ -78,6 +78,7 @@ const transformNotice = obj => {
   }
   if (obj.date) {
     result.date = format(obj.date)
+    result.age = calcAge(obj.date)
   }
   if (obj.sex) {
     result.sex = obj.sex
