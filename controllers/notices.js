@@ -2,6 +2,16 @@ const { Notice } = require("../models/notice")
 const { User } = require("../models/user")
 const { Types } = require("mongoose")
 const moment = require("moment")
+const cloudinary = require("cloudinary").v2
+require("dotenv").config()
+
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+})
 
 const {
   ctrlWrapper,
@@ -10,6 +20,7 @@ const {
   transformNotice,
   transformMinifiedNotice,
   transformNoticeExtended,
+  extractPublicId,
 } = require("../helpers")
 const { noticeCategories } = require("../constants")
 
@@ -27,7 +38,10 @@ const getAll = async (req, res) => {
   const skip = (page - 1) * limit
   const result = await Notice.find(findObject, "", { skip, limit })
   const totalResult = await Notice.find(findObject, "")
-  res.json({ totalResult: totalResult.length, notices: result.map(transformMinifiedNotice) })
+  res.json({
+    totalResult: totalResult.length,
+    notices: result.map(transformMinifiedNotice),
+  })
 }
 
 const getMyPets = async (req, res) => {
@@ -39,7 +53,10 @@ const getMyPets = async (req, res) => {
       options: { skip, limit },
     },
   ])
-  res.json({ totalResult: user.ownPets.length, notices: user.ownPets.map(transformNotice) })
+  res.json({
+    totalResult: user.ownPets.length,
+    notices: user.ownPets.map(transformNotice),
+  })
 }
 
 const getFavoriteAds = async (req, res) => {
@@ -49,7 +66,10 @@ const getFavoriteAds = async (req, res) => {
     path: "favorites",
     options: { skip, limit },
   })
-  res.json({ totalResult: favorites.length, notices: favorites.map(transformMinifiedNotice) })
+  res.json({
+    totalResult: favorites.length,
+    notices: favorites.map(transformMinifiedNotice),
+  })
 }
 
 const getMyAds = async (req, res) => {
@@ -97,10 +117,20 @@ const deleteById = async (req, res) => {
   if (notice.owner.toString() !== req.user._id.toString()) {
     throw HttpError(403, "Notice owner is not you")
   }
+
+  // Видаляє зображення із cloudinary
+  const publicId = extractPublicId(notice.file)
+  const cloudResp = await cloudinary.uploader.destroy(publicId)
+  if (!cloudResp.result || cloudResp.result === "not found") {
+    throw HttpError(500, "Image service error")
+  }
+
+  // Видаляє Pet із favorites
   await User.updateMany(
     { favorites: notice._id },
     { $pull: { favorites: notice._id } }
   )
+
   // Лише якщо це категорія MYPET тоді видаляємо
   // використуючи notice.owner , це ефективніше
   if (notice.category === noticeCategories.MYPET) {

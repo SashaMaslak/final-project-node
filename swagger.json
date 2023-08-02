@@ -353,6 +353,9 @@
                   "properties": {
                     "token": {
                       "$ref": "#/components/responses/TokenResponse"
+                    },
+                    "user": {
+                      "$ref": "#/components/responses/UserResponse"
                     }
                   }
                 }
