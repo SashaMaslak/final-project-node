@@ -13,12 +13,7 @@ const router = express.Router()
 
 router.get("/", validateParams(schemas.paramsNoticeSchema), ctrl.getAll)
 
-router.get(
-  "/mypets",
-  authenticate,
-  validateParams(schemas.paramsPaginationSchema),
-  ctrl.getMyPets
-)
+router.get("/mypets", authenticate, ctrl.getMyPets)
 
 router.get(
   "/favoriteads",

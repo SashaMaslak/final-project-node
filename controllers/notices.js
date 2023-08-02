@@ -37,24 +37,31 @@ const getAll = async (req, res) => {
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
   const result = await Notice.find(findObject, "", { skip, limit })
-  const totalResult = await Notice.find(findObject, "")
+  const totalResult = await Notice.countDocuments(findObject)
   res.json({
-    totalResult: totalResult.length,
+    totalResult,
     notices: result.map(transformMinifiedNotice),
   })
 }
 
 const getMyPets = async (req, res) => {
-  const { page = 1, limit = 12 } = req.query
-  const skip = (page - 1) * limit
-  const user = await req.user.populate([
-    {
-      path: "ownPets",
-      options: { skip, limit },
-    },
-  ])
+  // Відмінив пакгінацію тому що не встигну зробити
+
+  // const { page = 1, limit = 12 } = req.query
+  // const skip = (page - 1) * limit
+  // const user = await req.user.populate([
+  //   {
+  //     path: "ownPets",
+  //     options: { skip, limit },
+  //   },
+  // ])
+
+  // res.json({
+  //   totalResult: user.ownPets.length,
+  //   notices: user.ownPets.map(transformNotice),
+  // })
+  const user = await req.user.populate("ownPets")
   res.json({
-    totalResult: user.ownPets.length,
     notices: user.ownPets.map(transformNotice),
   })
 }
@@ -66,8 +73,9 @@ const getFavoriteAds = async (req, res) => {
     path: "favorites",
     options: { skip, limit },
   })
+  const totalResult = req.user.favorites.length
   res.json({
-    totalResult: favorites.length,
+    totalResult,
     notices: favorites.map(transformMinifiedNotice),
   })
 }
@@ -77,7 +85,9 @@ const getMyAds = async (req, res) => {
   const { page = 1, limit = 12 } = req.query
   const skip = (page - 1) * limit
   const result = await Notice.find({ owner }, "", { skip, limit })
-  res.json({ totalResult: result.length, notices: result.map(transformNotice) })
+  const totalResult = await Notice.countDocuments({ owner })
+  console.log(totalResult)
+  res.json({ totalResult, notices: result.map(transformNotice) })
 }
 
 const getById = async (req, res) => {
@@ -120,7 +130,8 @@ const deleteById = async (req, res) => {
 
   // Видаляє зображення із cloudinary
   const publicId = extractPublicId(notice.file)
-  const cloudResp = await cloudinary.uploader.destroy(publicId)
+  console.log(`publicId`, publicId)
+  const cloudResp = await cloudinary.uploader.destroy(`pets/${publicId}`)
   if (!cloudResp.result || cloudResp.result === "not found") {
     throw HttpError(500, "Image service error")
   }
