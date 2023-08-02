@@ -38,28 +38,15 @@ const getAll = async (req, res) => {
   const skip = (page - 1) * limit
   const result = await Notice.find(findObject, "", { skip, limit })
   const totalResult = await Notice.countDocuments(findObject)
+  const pages = Math.ceil(totalResult / limit)
   res.json({
-    totalResult,
+    pages,
     notices: result.map(transformMinifiedNotice),
   })
 }
 
 const getMyPets = async (req, res) => {
   // Відмінив пакгінацію тому що не встигну зробити
-
-  // const { page = 1, limit = 12 } = req.query
-  // const skip = (page - 1) * limit
-  // const user = await req.user.populate([
-  //   {
-  //     path: "ownPets",
-  //     options: { skip, limit },
-  //   },
-  // ])
-
-  // res.json({
-  //   totalResult: user.ownPets.length,
-  //   notices: user.ownPets.map(transformNotice),
-  // })
   const user = await req.user.populate("ownPets")
   res.json({
     notices: user.ownPets.map(transformNotice),
@@ -74,8 +61,9 @@ const getFavoriteAds = async (req, res) => {
     options: { skip, limit },
   })
   const totalResult = req.user.favorites.length
+  const pages = Math.ceil(totalResult / limit)
   res.json({
-    totalResult,
+    pages,
     notices: favorites.map(transformMinifiedNotice),
   })
 }
@@ -86,8 +74,11 @@ const getMyAds = async (req, res) => {
   const skip = (page - 1) * limit
   const result = await Notice.find({ owner }, "", { skip, limit })
   const totalResult = await Notice.countDocuments({ owner })
-  console.log(totalResult)
-  res.json({ totalResult, notices: result.map(transformNotice) })
+  const pages = Math.ceil(totalResult / limit)
+  res.json({
+    pages,
+    notices: result.map(transformNotice),
+  })
 }
 
 const getById = async (req, res) => {
