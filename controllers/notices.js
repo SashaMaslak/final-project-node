@@ -130,7 +130,6 @@ const deleteById = async (req, res) => {
 
   // Видаляє зображення із cloudinary
   const publicId = extractPublicId(notice.file)
-  console.log(`publicId`, publicId)
   const cloudResp = await cloudinary.uploader.destroy(`pets/${publicId}`)
   if (!cloudResp.result || cloudResp.result === "not found") {
     throw HttpError(500, "Image service error")
