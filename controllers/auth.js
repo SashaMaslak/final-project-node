@@ -66,12 +66,15 @@ const verifyEmail = async (req, res) => {
   } else if (!user.verificationToken) {
     HttpError(404)
   }
+
+  const payload = { id: user._id }
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
   await User.findByIdAndUpdate(user._id, {
     verify: true,
     verificationToken: "",
+    token,
   })
-  const payload = { id: user._id }
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
+
   res.json({ token, user: transformUser(user) })
 }
 

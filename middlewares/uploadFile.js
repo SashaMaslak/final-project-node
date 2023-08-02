@@ -2,6 +2,7 @@ const multer = require("multer")
 const cloudinary = require("cloudinary").v2
 const { CloudinaryStorage } = require("multer-storage-cloudinary")
 const { nanoid } = require("nanoid")
+require("dotenv").config()
 
 const { imageFileLimit } = require("../constants")
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
@@ -20,8 +21,6 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    console.log("STORAGE")
-
     let folder
     switch (file.fieldname) {
       case "avatar":

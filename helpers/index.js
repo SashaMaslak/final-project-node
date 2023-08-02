@@ -11,6 +11,7 @@ const {
   transformUser,
 } = require("./transformFuncs")
 const getEnv = require("./getEnv")
+const extractPublicId = require("./extractPublicId")
 
 module.exports = {
   HttpError,
@@ -24,4 +25,5 @@ module.exports = {
   transformNoticeExtended,
   transformUser,
   getEnv,
+  extractPublicId,
 }

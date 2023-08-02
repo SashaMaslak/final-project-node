@@ -2,6 +2,16 @@ const { Notice } = require("../models/notice")
 const { User } = require("../models/user")
 const { Types } = require("mongoose")
 const moment = require("moment")
+const cloudinary = require("cloudinary").v2
+require("dotenv").config()
+
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+})
 
 const {
   ctrlWrapper,
@@ -10,6 +20,7 @@ const {
   transformNotice,
   transformMinifiedNotice,
   transformNoticeExtended,
+  extractPublicId,
 } = require("../helpers")
 const { noticeCategories } = require("../constants")
 
@@ -26,8 +37,8 @@ const getAll = async (req, res) => {
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
   const result = await Notice.find(findObject, "", { skip, limit })
-  const totalResult = await Notice.find(findObject, "")
-  const pages = Math.ceil(totalResult.length / limit)
+  const totalResult = await Notice.countDocuments(findObject)
+  const pages = Math.ceil(totalResult / limit)
   res.json({
     pages,
     notices: result.map(transformMinifiedNotice),
@@ -35,17 +46,9 @@ const getAll = async (req, res) => {
 }
 
 const getMyPets = async (req, res) => {
-  const { page = 1, limit = 12 } = req.query
-  const skip = (page - 1) * limit
-  const user = await req.user.populate([
-    {
-      path: "ownPets",
-      options: { skip, limit },
-    },
-  ])
-  const pages = Math.ceil(user.ownPets.length / limit)
+  // Відмінив пакгінацію тому що не встигну зробити
+  const user = await req.user.populate("ownPets")
   res.json({
-    pages,
     notices: user.ownPets.map(transformNotice),
   })
 }
@@ -57,7 +60,8 @@ const getFavoriteAds = async (req, res) => {
     path: "favorites",
     options: { skip, limit },
   })
-  const pages = Math.ceil(favorites.length / limit)
+  const totalResult = req.user.favorites.length
+  const pages = Math.ceil(totalResult / limit)
   res.json({
     pages,
     notices: favorites.map(transformMinifiedNotice),
@@ -69,8 +73,12 @@ const getMyAds = async (req, res) => {
   const { page = 1, limit = 12 } = req.query
   const skip = (page - 1) * limit
   const result = await Notice.find({ owner }, "", { skip, limit })
-  const pages = Math.ceil(result.length / limit)
-  res.json({ pages, notices: result.map(transformNotice) })
+  const totalResult = await Notice.countDocuments({ owner })
+  const pages = Math.ceil(totalResult / limit)
+  res.json({
+    pages,
+    notices: result.map(transformNotice),
+  })
 }
 
 const getById = async (req, res) => {
@@ -110,10 +118,20 @@ const deleteById = async (req, res) => {
   if (notice.owner.toString() !== req.user._id.toString()) {
     throw HttpError(403, "Notice owner is not you")
   }
+
+  // Видаляє зображення із cloudinary
+  const publicId = extractPublicId(notice.file)
+  const cloudResp = await cloudinary.uploader.destroy(`pets/${publicId}`)
+  if (!cloudResp.result || cloudResp.result === "not found") {
+    throw HttpError(500, "Image service error")
+  }
+
+  // Видаляє Pet із favorites
   await User.updateMany(
     { favorites: notice._id },
     { $pull: { favorites: notice._id } }
   )
+
   // Лише якщо це категорія MYPET тоді видаляємо
   // використуючи notice.owner , це ефективніше
   if (notice.category === noticeCategories.MYPET) {

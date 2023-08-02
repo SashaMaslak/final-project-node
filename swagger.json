@@ -353,6 +353,9 @@
                   "properties": {
                     "token": {
                       "$ref": "#/components/responses/TokenResponse"
+                    },
+                    "user": {
+                      "$ref": "#/components/responses/UserResponse"
                     }
                   }
                 }
@@ -527,6 +530,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "totalResult": {
+                      "type": "integer",
+                      "example": 1200
+                    },
                     "notices": {
                       "type": "array",
                       "items": {
@@ -619,10 +626,6 @@
         "tags": ["Notice"],
         "security": [{ "BearerToken": [] }],
         "description": "Отримати масив лише категорії своїх my-pets (Приватний)",
-        "parameters": [
-          { "$ref": "#/components/parameters/page" },
-          { "$ref": "#/components/parameters/limit" }
-        ],
         "responses": {
           "200": {
             "description": "Успіх, отримано масив всіх свої публікації категорії my-pets",
@@ -668,6 +671,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "totalResult": {
+                      "type": "integer",
+                      "example": 1200
+                    },
                     "favorites": {
                       "type": "array",
                       "items": {
@@ -705,6 +712,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "totalResult": {
+                      "type": "integer",
+                      "example": 1200
+                    },
                     "notices": {
                       "type": "array",
                       "items": {
