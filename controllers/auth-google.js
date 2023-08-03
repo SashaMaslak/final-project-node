@@ -49,12 +49,12 @@ const googleRedirect = async (req, res) => {
     }
   )
 
-  const user = User.find({ email: userData.email })
+  let user = User.find({ email: userData.email })
   if (!user) {
     const password = nanoid()
     const hashPassword = await bcrypt.hash(password, 10)
 
-    const newUser = await User.create({
+    user = await User.create({
       name: userData.name,
       email: userData.email,
       password: hashPassword,
@@ -62,9 +62,9 @@ const googleRedirect = async (req, res) => {
     })
   }
 
-  const payload = { id: newUser._id }
+  const payload = { id: user._id }
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
-  await User.findByIdAndUpdate(newUser._id, { token })
+  await User.findByIdAndUpdate(user._id, { token })
 
   res.redirect(`${BASE_URL_FRONTEND}?token=${token}`)
 }

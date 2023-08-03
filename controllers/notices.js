@@ -164,8 +164,8 @@ const deleteById = async (req, res) => {
     })
   }
 
-  const notice = await Notice.findByIdAndRemove(noticeId)
-  res.json({ notice: transformNotice(notice) })
+  const deletedNotice = await Notice.findByIdAndRemove(noticeId)
+  res.json({ notice: transformNotice(deletedNotice) })
 }
 
 const toggleNoticeFavorite = async (req, res) => {
