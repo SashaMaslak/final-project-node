@@ -1,6 +1,7 @@
 const axios = require("axios")
 require("dotenv").config()
 
+const { User } = require("../models/user.js")
 const { ctrlWrapper, getEnv } = require("../helpers")
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
@@ -55,6 +56,16 @@ const googleRedirect = async (req, res) => {
   //   picture:
   //     "https://lh3.googleusercontent.com/a/AAcHTtfBZ45X22pLmrIXMyQfMBZ3SRuRGW3hqqt9mmJBYbXdvho=s96-c",
   //   locale: "uk",
+  // }
+
+  // const user = User.find({ email: userData.email })
+  // if (!user) {
+  //    const newUser = await User.create({
+  //      ...req.body,
+  //      password: hashPassword,
+  //      verificationToken,
+  //      verify: false,
+  //    })
   // }
 
   res.redirect(`${BASE_URL_FRONTEND}?email=${userData.email}`)

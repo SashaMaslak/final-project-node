@@ -18,14 +18,14 @@ router.get("/mypets", authenticate, ctrl.getMyPets)
 router.get(
   "/favoriteads",
   authenticate,
-  validateParams(schemas.paramsPaginationSchema),
+  validateParams(schemas.paramsNoticeSecondSchema),
   ctrl.getFavoriteAds
 )
 
 router.get(
   "/myads",
   authenticate,
-  validateParams(schemas.paramsPaginationSchema),
+  validateParams(schemas.paramsNoticeSecondSchema),
   ctrl.getMyAds
 )
 

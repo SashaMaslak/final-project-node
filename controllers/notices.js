@@ -5,14 +5,6 @@ const moment = require("moment")
 const cloudinary = require("cloudinary").v2
 require("dotenv").config()
 
-const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
-  process.env
-cloudinary.config({
-  cloud_name: CLOUDINARY_CLOUD_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret: CLOUDINARY_API_SECRET,
-})
-
 const {
   ctrlWrapper,
   HttpError,
@@ -24,21 +16,37 @@ const {
 } = require("../helpers")
 const { noticeCategories } = require("../constants")
 
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+})
+
 //get all and get for params
 const getAll = async (req, res) => {
   const {
     page = 1,
     limit = 12,
-    category = "",
+    category = "sell",
     sex = "",
     date = "",
     query = "",
   } = req.query
+
   const findObject = objForSearch({ category, sex, date, query })
   const skip = (page - 1) * limit
-  const result = await Notice.find(findObject, "", { skip, limit })
+  const sort = { createdAt: -1 }
+
   const totalResult = await Notice.countDocuments(findObject)
   const pages = Math.ceil(totalResult / limit)
+
+  const result = await Notice.find(findObject)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+
   res.json({
     pages,
     notices: result.map(transformMinifiedNotice),
@@ -54,14 +62,21 @@ const getMyPets = async (req, res) => {
 }
 
 const getFavoriteAds = async (req, res) => {
-  const { page = 1, limit = 12 } = req.query
+  const { page = 1, limit = 12, sex = "", date = "", query = "" } = req.query
+
+  const findObject = objForSearch({ sex, date, query })
   const skip = (page - 1) * limit
-  const { favorites } = await req.user.populate({
-    path: "favorites",
-    options: { skip, limit },
-  })
+  const sort = { "favorites._id": -1 }
+
   const totalResult = req.user.favorites.length
   const pages = Math.ceil(totalResult / limit)
+
+  const { favorites } = await req.user.populate({
+    path: "favorites",
+    match: findObject,
+    options: { sort, skip, limit },
+  })
+
   res.json({
     pages,
     notices: favorites.map(transformMinifiedNotice),
@@ -70,11 +85,20 @@ const getFavoriteAds = async (req, res) => {
 
 const getMyAds = async (req, res) => {
   const { _id: owner } = req.user
-  const { page = 1, limit = 12 } = req.query
+  const { page = 1, limit = 12, sex = "", date = "", query = "" } = req.query
+
+  const findObject = objForSearch({ sex, date, query })
   const skip = (page - 1) * limit
-  const result = await Notice.find({ owner }, "", { skip, limit })
+  const sort = { createdAt: -1 }
+
   const totalResult = await Notice.countDocuments({ owner })
   const pages = Math.ceil(totalResult / limit)
+
+  const result = await Notice.find({ ...findObject, owner })
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+
   res.json({
     pages,
     notices: result.map(transformNotice),
@@ -139,8 +163,9 @@ const deleteById = async (req, res) => {
       $pull: { ownPets: notice._id },
     })
   }
-  await Notice.findByIdAndRemove(noticeId)
-  res.json({ message: "Delete successfully" })
+
+  const notice = await Notice.findByIdAndRemove(noticeId)
+  res.json({ notice: transformNotice(notice) })
 }
 
 const toggleNoticeFavorite = async (req, res) => {
