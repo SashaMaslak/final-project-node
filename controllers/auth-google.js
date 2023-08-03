@@ -1,10 +1,13 @@
 const axios = require("axios")
+const { nanoid } = require("nanoid")
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
 const { User } = require("../models/user.js")
 const { ctrlWrapper, getEnv } = require("../helpers")
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
+const { SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
 const { BASE_URL, BASE_URL_FRONTEND } = getEnv()
 
 const googleAuth = async (req, res) => {
@@ -46,29 +49,24 @@ const googleRedirect = async (req, res) => {
     }
   )
 
-  // {
-  //   id: "117798264081435904781",
-  //   email: "melnykmyron1808@gmail.com",
-  //   verified_email: true,
-  //   name: "Мирон Мельник",
-  //   given_name: "Мирон",
-  //   family_name: "Мельник",
-  //   picture:
-  //     "https://lh3.googleusercontent.com/a/AAcHTtfBZ45X22pLmrIXMyQfMBZ3SRuRGW3hqqt9mmJBYbXdvho=s96-c",
-  //   locale: "uk",
-  // }
+  const user = User.find({ email: userData.email })
+  if (!user) {
+    const password = nanoid()
+    const hashPassword = await bcrypt.hash(password, 10)
 
-  // const user = User.find({ email: userData.email })
-  // if (!user) {
-  //    const newUser = await User.create({
-  //      ...req.body,
-  //      password: hashPassword,
-  //      verificationToken,
-  //      verify: false,
-  //    })
-  // }
+    const newUser = await User.create({
+      name: userData.name,
+      email: userData.email,
+      password: hashPassword,
+      avatar: userData.picture,
+    })
+  }
 
-  res.redirect(`${BASE_URL_FRONTEND}?email=${userData.email}`)
+  const payload = { id: newUser._id }
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
+  await User.findByIdAndUpdate(newUser._id, { token })
+
+  res.redirect(`${BASE_URL_FRONTEND}?token=${token}`)
 }
 
 module.exports = {
