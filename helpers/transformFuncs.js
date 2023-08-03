@@ -47,8 +47,6 @@ const transformMinifiedNotice = obj => {
     category: obj.category,
     file: obj.file,
     owner: obj.owner,
-    updatedAt: obj.updatedAt,
-    createdAt: obj.createdAt,
   }
   if (obj.title) {
     result.title = obj.title
