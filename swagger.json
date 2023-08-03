@@ -21,7 +21,7 @@
     "/users/register": {
       "post": {
         "tags": ["User"],
-        "description": "Реєстрацію користувача (Публічний)",
+        "description": "User registration (Public)",
         "requestBody": {
           "required": true,
           "content": {
@@ -34,7 +34,7 @@
         },
         "responses": {
           "201": {
-            "description": "Успіх, зареєстровано",
+            "description": "Success, registered",
             "content": {
               "application/json": {
                 "schema": {
@@ -50,23 +50,10 @@
             }
           },
           "400": {
-            "description": "Помилка валідації",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "\"password\" is required"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "409": {
-            "description": "Email вже існує",
+            "description": "Email already exists",
             "content": {
               "application/json": {
                 "schema": {
@@ -90,7 +77,7 @@
     "/users/login": {
       "post": {
         "tags": ["User"],
-        "description": "Вхід користувача (Публічний)",
+        "description": "User Login (Public)",
         "requestBody": {
           "required": true,
           "content": {
@@ -103,7 +90,7 @@
         },
         "responses": {
           "200": {
-            "description": "Успіх, залогінено, повернено jwt token",
+            "description": "Success, logged in, jwt token returned",
             "content": {
               "application/json": {
                 "schema": {
@@ -121,23 +108,10 @@
             }
           },
           "400": {
-            "description": "Помилка валідації",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "\"password\" is required"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "401": {
-            "description": "Неправильний email чи password",
+            "description": "Incorrect email or password",
             "content": {
               "application/json": {
                 "schema": {
@@ -161,11 +135,11 @@
     "/users/current": {
       "get": {
         "tags": ["User"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Дізнатися email, name користувача (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Find out the email, name of the user with jwt (Private)",
         "responses": {
           "200": {
-            "description": "Успіх, віддано email, name користувача",
+            "description": "Success, sended email, username",
             "content": {
               "application/json": {
                 "schema": {
@@ -194,11 +168,11 @@
     "/users/logout": {
       "post": {
         "tags": ["User"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Логаут користувача (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "User logout (Private)",
         "responses": {
           "204": {
-            "description": "Успіх, стерто jwt в базі даних",
+            "description": "Success, deleted jwt in database",
             "content": {
               "application/json": {
                 "schema": {
@@ -225,8 +199,8 @@
     "/users/avatar": {
       "put": {
         "tags": ["User"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Змінити аватар (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Change Avatar (Private)",
         "requestBody": {
           "required": true,
           "content": {
@@ -239,7 +213,7 @@
         },
         "responses": {
           "200": {
-            "description": "Успіх, аватар успішно змінено",
+            "description": "Success, avatar successfully changedо",
             "content": {
               "application/json": {
                 "schema": {
@@ -249,20 +223,7 @@
             }
           },
           "400": {
-            "description": "Помилка в запиті (можливо тому, що multipart/form-data не має поля avatar)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Missed required avatar form-data field"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "401": {
             "$ref": "#/components/responses/NotAuthorized"
@@ -276,8 +237,8 @@
     "/users": {
       "put": {
         "tags": ["User"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Для оновлення даних користувача (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "To update user data (Private)",
         "requestBody": {
           "required": true,
           "content": {
@@ -290,7 +251,7 @@
         },
         "responses": {
           "200": {
-            "description": "Успіх, аватар успішно змінено",
+            "description": "Success, avatar successfully changed",
             "content": {
               "application/json": {
                 "schema": {
@@ -305,20 +266,7 @@
             }
           },
           "400": {
-            "description": "Помилка в запиті (можливо тому, що multipart/form-data не має поля avatar)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Missed required avatar form-data field"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "401": {
             "$ref": "#/components/responses/NotAuthorized"
@@ -332,7 +280,7 @@
     "/verify/{verificationToken}": {
       "get": {
         "tags": ["User"],
-        "description": "Підтвердження пошти (Публічний)",
+        "description": "Mail Confirmation (Public)",
         "parameters": [
           {
             "name": "verificationToken",
@@ -345,7 +293,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успіх, пошту підтверджено",
+            "description": "Success, mail confirmed",
             "content": {
               "application/json": {
                 "schema": {
@@ -363,7 +311,7 @@
             }
           },
           "404": {
-            "description": "Не знайдено User за цим verificationToken",
+            "description": "No User found for this verificationToken",
             "content": {
               "application/json": {
                 "schema": {
@@ -387,7 +335,7 @@
     "/verify": {
       "post": {
         "tags": ["User"],
-        "description": "Надіслати знову підтвердження пошти (Публічний)",
+        "description": "Resend Email Confirmation (Public)",
         "requestBody": {
           "required": true,
           "content": {
@@ -400,7 +348,7 @@
         },
         "responses": {
           "200": {
-            "description": "Успіх, лист повторно відправлено на пошту",
+            "description": "Success, the letter has been resent to the email",
             "content": {
               "application/json": {
                 "schema": {
@@ -416,23 +364,10 @@
             }
           },
           "400": {
-            "description": "Помилка валідації",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "\"email\" with value \"@gmail.com\" fails to match the required pattern: /^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$/"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "401": {
-            "description": "Верифікацію уже пройдено",
+            "description": "Verification has already been completed",
             "content": {
               "application/json": {
                 "schema": {
@@ -448,7 +383,7 @@
             }
           },
           "404": {
-            "description": "Не знайдено User за цим email",
+            "description": "No User found for this email",
             "content": {
               "application/json": {
                 "schema": {
@@ -472,26 +407,13 @@
     "/auth/google": {
       "get": {
         "tags": ["Auth"],
-        "description": "Ідентифікація проекту, та користувача через google auth (Публічний)",
+        "description": "Project and user identification through google auth (Public)",
         "responses": {
           "302": {
-            "description": "Перенаправлено на https://accounts.google.com/o/oauth2/v2/auth ..."
+            "description": "Redirected to https://accounts.google.com/o/oauth2/v2/auth ..."
           },
           "500": {
-            "description": "Помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Server error"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -499,10 +421,10 @@
     "/auth/google-redirect": {
       "get": {
         "tags": ["Auth"],
-        "description": "Отримання даних користувача та їх перенапралення на фронтенд (технічний енпоінт для google НЕ ВИКОРИСТОВУВАТИ) (Публічний)",
+        "description": "Receiving user data and forwarding it to the frontend (technical enpoint for google DON'T USE) (Public)",
         "responses": {
           "302": {
-            "description": "Перенаправлено на Фронтенд з параметрами ? email = & name = ..."
+            "description": "Redirected to Frontend with options ? email = and name = ..."
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
@@ -513,7 +435,7 @@
     "/notices": {
       "get": {
         "tags": ["Notice"],
-        "description": "Отримати 12 з пагінацією з фільтрами та піошуком (Публічний)",
+        "description": "Get 12 with Pagination with Filters and Pio Search (Public)",
         "parameters": [
           { "$ref": "#/components/parameters/category" },
           { "$ref": "#/components/parameters/date" },
@@ -524,7 +446,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успіх, отримано 12, або менше notices",
+            "description": "Success, received 12 or less notices",
             "content": {
               "application/json": {
                 "schema": {
@@ -546,20 +468,7 @@
             }
           },
           "400": {
-            "description": "Неправильний запит (в параметрах)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "\"date\" must be one of [3-12m, 1y, 2y]"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
@@ -568,8 +477,8 @@
       },
       "post": {
         "tags": ["Notice"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Створити новий notice (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Create a new pet card (Private)",
         "requestBody": {
           "required": true,
           "content": {
@@ -582,7 +491,7 @@
         },
         "responses": {
           "201": {
-            "description": "Успіх створений, повертає сам notice",
+            "description": "Success, created, response new pet card",
             "content": {
               "application/json": {
                 "schema": {
@@ -597,20 +506,7 @@
             }
           },
           "400": {
-            "description": "Помилка в запиті (можливо тому, що це не multipart/form-data)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Missed required avatar form-data field"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "401": {
             "$ref": "#/components/responses/NotAuthorized"
@@ -624,11 +520,11 @@
     "/notices/mypets": {
       "get": {
         "tags": ["Notice"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Отримати масив лише категорії своїх my-pets (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Get an array of only the categories of your my-pets (Private)",
         "responses": {
           "200": {
-            "description": "Успіх, отримано масив всіх свої публікації категорії my-pets",
+            "description": "Success, the array of all your publications in the my-pets category has been received",
             "content": {
               "application/json": {
                 "schema": {
@@ -657,15 +553,15 @@
     "/notices/favoriteads": {
       "get": {
         "tags": ["Notice"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Отримати масив улюблених pets-ів (доданих в favorite) (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Get an array of favorite pets (added to favorite) (Private)",
         "parameters": [
           { "$ref": "#/components/parameters/page" },
           { "$ref": "#/components/parameters/limit" }
         ],
         "responses": {
           "200": {
-            "description": "Успіх, отримано масив улюблених",
+            "description": "Success, received an array of favorites",
             "content": {
               "application/json": {
                 "schema": {
@@ -698,11 +594,11 @@
     "/notices/myads": {
       "get": {
         "tags": ["Notice"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Отримати масив улюблених усіх своїх публікацій (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Get an array of favorites of all your posts (Private)",
         "responses": {
           "200": {
-            "description": "Успіх, отримано масив усіх своїх публікацій",
+            "description": "Success, the array of all your publications has been received",
             "parameters": [
               { "$ref": "#/components/parameters/page" },
               { "$ref": "#/components/parameters/limit" }
@@ -739,7 +635,7 @@
     "/notices/{noticeId}": {
       "get": {
         "tags": ["Notice"],
-        "description": "Отримати один notice по id (Публічний)",
+        "description": "Get one notice by id (Public)",
         "parameters": [
           {
             "name": "noticeId",
@@ -752,7 +648,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успіх, отримано один notice",
+            "description": "Success, received one notice",
             "content": {
               "application/json": {
                 "schema": {
@@ -767,23 +663,10 @@
             }
           },
           "400": {
-            "description": "Невалідний id",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "5556566 is not valid id"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "404": {
-            "description": "Не знайдено notice за даним id",
+            "description": "No notice found for this id",
             "content": {
               "application/json": {
                 "schema": {
@@ -805,8 +688,8 @@
       },
       "delete": {
         "tags": ["Notice"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Видалити notice (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Delete notice (Private)",
         "parameters": [
           {
             "name": "noticeId",
@@ -819,7 +702,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успіх, видалено",
+            "description": "Success, deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -838,7 +721,7 @@
             "$ref": "#/components/responses/NotAuthorized"
           },
           "403": {
-            "description": "Той хто видаляє публікацію, не є його власник",
+            "description": "The person who deletes the publication is not its owner",
             "content": {
               "application/json": {
                 "schema": {
@@ -854,7 +737,7 @@
             }
           },
           "404": {
-            "description": "Notice не знайдено (тож не може бути видалено)",
+            "description": "Notice not found (so cannot be deleted)",
             "content": {
               "application/json": {
                 "schema": {
@@ -878,8 +761,8 @@
     "/{noticeId}/favorite": {
       "post": {
         "tags": ["Notice"],
-        "security": [{ "BearerToken": [] }],
-        "description": "Toggle на додавання / видалення користувача із масиву favorites (Приватний)",
+        "security": [{ "Bearer": [] }],
+        "description": "Toggle to add/remove a user from the favorites array (Private)",
         "parameters": [
           {
             "name": "noticeId",
@@ -892,7 +775,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успіх, додавано / видалено notice із масиву favorites",
+            "description": "Success, added / removed notice from favorites array",
             "content": {
               "application/json": {
                 "schema": {
@@ -912,26 +795,13 @@
             }
           },
           "400": {
-            "description": "Невалідний id",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "5556566 is not valid id"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ValidationError"
           },
           "401": {
             "$ref": "#/components/responses/NotAuthorized"
           },
           "404": {
-            "description": "Не знайдено notice за даним id",
+            "description": "No notice found for this id",
             "content": {
               "application/json": {
                 "schema": {
@@ -955,10 +825,31 @@
     "/sponsors.json": {
       "get": {
         "tags": ["Public"],
-        "description": "Отримати масив спонсорів (Публічний)",
+        "description": "Get an array of sponsors (Public)",
         "responses": {
           "200": {
-            "description": "Віддає json спонсорів",
+            "description": "Return json of sponsors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/SponsorsRespons"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/allArticles.json": {
+      "get": {
+        "tags": ["Public"],
+        "description": "Get an array of news (Public)",
+        "responses": {
+          "200": {
+            "description": "Return json of news",
             "content": {
               "application/json": {
                 "schema": {
@@ -977,10 +868,9 @@
 
   "components": {
     "securitySchemes": {
-      "BearerToken": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "AuthorizationBearerToken"
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
       }
     },
 
@@ -992,7 +882,7 @@
             "type": "string",
             "format": "email",
             "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
-            "description": "спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери",
+            "description": "first at least 1 letter, then @, then at least 1 letter, then a dot, at the end 2-3 letters",
             "example": "johnnattas1987@gmail.com",
             "required": true
           }
@@ -1005,7 +895,7 @@
             "type": "string",
             "format": "email",
             "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
-            "description": "спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери",
+            "description": "first at least 1 letter, then @, then at least 1 letter, then a dot, at the end 2-3 letters",
             "example": "johnnattas1987@gmail.com",
             "required": true
           },
@@ -1013,7 +903,7 @@
             "type": "string",
             "minLength": 6,
             "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,16})",
-            "description": "від 6 до 16 з хоча б одною UpperCase, одною LowerCase та одною цифрою",
+            "description": "6 to 16 with at least one UpperCase, one LowerCase, and one digit",
             "example": "qWeR2tY",
             "required": true
           }
@@ -1028,13 +918,13 @@
             "maxLength": 16,
             "required": true,
             "example": "John",
-            "description": "Мін 2 літери, макс 16 літер"
+            "description": "Min 2 letters, max 16 letters"
           },
           "email": {
             "type": "string",
             "format": "email",
             "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
-            "description": "спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери",
+            "description": "first at least 1 letter, then @, then at least 1 letter, then a dot, at the end 2-3 letters",
             "example": "johnnattas1987@gmail.com",
             "required": true
           },
@@ -1042,7 +932,7 @@
             "type": "string",
             "minLength": 6,
             "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,16})",
-            "description": "від 6 до 16 з хоча б одною UpperCase, одною LowerCase та одною цифрою",
+            "description": "6 to 16 with at least one UpperCase, one LowerCase, and one digit",
             "example": "qWeR2tY",
             "required": true
           }
@@ -1065,21 +955,21 @@
             "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
             "required": true,
             "example": "johnnattas1987@gmail.com",
-            "description": "Спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери"
+            "description": "first at least 1 letter, then @, then at least 1 letter, then a dot, at the end 2-3 letters"
           },
           "city": {
             "type": "string",
             "minLength": 2,
             "pattern": "^[a-zA-Z]+$",
             "example": "Kyiv",
-            "description": "Лише літери, без цифер та без пробілу мін 2"
+            "description": "Only letters, no numbers and no spaces min 2"
           },
           "phone": {
             "type": "string",
             "pattern": "^\\+\\d{12}$",
             "required": true,
             "example": "+380984739205",
-            "description": "Починається з +, лише 12 цифер, без пробілів, та без букв"
+            "description": "It starts with +, only 12 digits, no spaces, and no letters"
           },
           "birthday": {
             "type": "string",
@@ -1096,7 +986,7 @@
           "avatar": {
             "type": "string",
             "format": "binary",
-            "description": "Аватарка в форматі файлу .jpg .png"
+            "description": "Avatar in .jpg .png file format"
           }
         }
       },
@@ -1108,14 +998,14 @@
             "enum": ["sell", "lost-found", "for-free", "my-pet"],
             "required": true,
             "example": "sell",
-            "description": "Одне з 'sell', 'lost-found', 'for-free', 'my-pet'"
+            "description": "One of 'sell', 'lost-found', 'for-free', 'my-pet'"
           },
           "title": {
             "type": "string",
             "minLength": 4,
             "maxLength": 32,
             "example": "Cute dog looking for a home",
-            "description": "Min 4 макс 32 літери, обов'язкове для  sell, lost-found, for-free"
+            "description": "Min 4 max 32 letters, required for 'sell', 'lost-found', 'for-free'"
           },
           "name": {
             "type": "string",
@@ -1123,13 +1013,13 @@
             "maxLength": 16,
             "required": true,
             "example": "Lady",
-            "description": "Мін 2 макс 16"
+            "description": "Min 2 max 16"
           },
           "date": {
             "type": "string",
             "format": "date",
             "example": "2023-07-27T00:00:00.00Z",
-            "description": "Дата в форматі new Date() '2023-07-23T00:00:00.000Z', обов'язкове для  sell, for-free"
+            "description": "Date in format new Date() '2023-07-23T00:00:00.000Z', required for 'sell', 'for-free'"
           },
           "type": {
             "type": "string",
@@ -1138,51 +1028,51 @@
             "pattern": "^[a-zA-Z ]+$",
             "required": true,
             "example": "Siamese",
-            "description": "Лише літери, без цифер"
+            "description": "Only letters, no numbers"
           },
           "file": {
             "type": "string",
             "format": "binary",
-            "description": "Аватарка в форматі файлу .jpg .png"
+            "description": "Avatar in .jpg .png file format"
           },
           "sex": {
             "type": "string",
             "enum": ["female", "male"],
             "example": "female",
-            "description": "Обов'язкове для  sell, lost-found, for-free, одне з 'male', 'female'"
+            "description": "Required for sell, lost-found, for-free, one of 'male', 'female'"
           },
           "location": {
             "type": "string",
             "minLength": 2,
             "pattern": "^[a-zA-Z]+$",
             "example": "Kyiv",
-            "description": "Лише літери, без цифер та без пробілу мін 2 обов'язкове для sell, lost-found, for-free"
+            "description": "Only letters, no numbers and no spaces min 2 required for 'sell', 'lost-found', 'for-free'"
           },
           "price": {
             "type": "integer",
             "minimum": 1,
             "example": 250,
-            "description": "Мінімум 1, обов'язкове для sell"
+            "description": "Minimum 1 required for 'sell'"
           },
           "comments": {
             "type": "string",
             "maxLength": 140,
             "default": "",
             "example": "Rich would be the perfect addition to an active family that loves to play and go on walks. I bet he would love having a doggy playmate too! ",
-            "description": "Необов'язкове за замовчуанням ''"
+            "description": "Optional, defaults to an empty string"
           }
         }
       }
     },
 
     "parameters": {
-      "cateory": {
+      "category": {
         "name": "category",
         "in": "query",
         "type": "string",
         "enum": ["sell", "lost-found", "for-free"],
         "example": "sell",
-        "description": "Для видачі pets-ів за категорією один з 'sell', 'lost-found', 'for-free'"
+        "description": "To choose pets by category one of 'sell', 'lost-found', 'for-free'"
       },
       "date": {
         "name": "date",
@@ -1190,7 +1080,7 @@
         "type": "string",
         "enum": ["3-12m", "1y", "2y"],
         "example": "3-12m",
-        "description": "Для фільтру по даті один з '3-12m', '1y', '2y'"
+        "description": "For a date filter, one of '3-12m', '1y', '2y'"
       },
       "sex": {
         "name": "sex",
@@ -1198,14 +1088,14 @@
         "type": "string",
         "enum": ["female", "male"],
         "example": "female",
-        "description": "Для фільтру по статі один з 'female', 'male'"
+        "description": "For gender filter, one of 'female', 'male'"
       },
       "query": {
         "name": "query",
         "in": "query",
         "type": "string",
         "example": "cat",
-        "description": "Для пошуку по ключовому слову"
+        "description": "To search by keyword"
       },
       "page": {
         "name": "page",
@@ -1213,7 +1103,7 @@
         "type": "integer",
         "default": 1,
         "example": 2,
-        "description": "Сторінка елементів (пагінація)"
+        "description": "Page of elements (pagination)"
       },
       "limit": {
         "name": "limit",
@@ -1221,7 +1111,7 @@
         "type": "integer",
         "default": 12,
         "example": 12,
-        "description": "Кількість елементів які повинні повернутись (пагінація)"
+        "description": "Number of elements to be returned (pagination)"
       }
     },
 
@@ -1244,27 +1134,23 @@
             "type": "string",
             "format": "email",
             "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
-            "example": "johnnattas1987@gmail.com",
-            "description": "спочатку мін 1 буква, потім @, потім мін 1 буква, потім крапка, в кінці 2-3 літери"
+            "example": "johnnattas1987@gmail.com"
           },
           "city": {
             "type": "string",
             "minLength": 2,
             "pattern": "^[a-zA-Z]+$",
-            "example": "Kyiv",
-            "description": "Лише літери, без цифер та без пробілу мін 2"
+            "example": "Kyiv"
           },
           "phone": {
             "type": "string",
             "pattern": "^\\+\\d{12}$",
-            "example": "+380984739205",
-            "description": "Починається з +, лише 12 цифер, без пробілів, та без букв"
+            "example": "+380984739205"
           },
           "birthday": {
             "type": "string",
             "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
-            "example": "18-08-1987",
-            "description": "Date of birth in the format DD-MM-YYYY"
+            "example": "18-08-1987"
           },
           "avatar": {
             "type": "string",
@@ -1289,7 +1175,7 @@
             "type": "string",
             "minLength": 4,
             "maxLength": 32,
-            "description": "Min 4 макс 32 літери, обов'язкове для  sell, lost-found, for-free"
+            "description": "Min 4 max 32 letters, mandatory for sell, lost-found, for-free"
           },
           "name": {
             "type": "string",
@@ -1309,8 +1195,7 @@
             "minLength": 2,
             "maxLength": 16,
             "pattern": "^[a-zA-Z ]+$",
-            "example": "Siamese",
-            "description": "Only letters without numbers"
+            "example": "Siamese"
           },
           "file": {
             "type": "string",
@@ -1325,8 +1210,7 @@
             "type": "string",
             "minLength": 2,
             "pattern": "^[a-zA-Z]+$",
-            "example": "Kyiv",
-            "description": "Лише літери, без цифер та без пробілу мін 2"
+            "example": "Kyiv"
           },
           "price": {
             "type": "integer",
@@ -1357,13 +1241,12 @@
           "title": {
             "type": "string",
             "minLength": 4,
-            "maxLength": 32,
-            "description": "Min 4 макс 32 літери, обов'язкове для  sell, lost-found, for-free"
+            "maxLength": 32
           },
           "age": {
             "type": "string",
             "example": "1 year",
-            "description": "Готовий вирахуваний вік pets-а"
+            "description": "Ready calculated age for pet"
           },
           "file": {
             "type": "string",
@@ -1378,15 +1261,13 @@
             "type": "string",
             "minLength": 2,
             "pattern": "^[a-zA-Z]+$",
-            "example": "Kyiv",
-            "description": "Лише літери, без цифер та без пробілу мін 2"
+            "example": "Kyiv"
           },
           "comments": {
             "type": "string",
             "maxLength": 140,
             "default": "",
-            "example": "Rich would be the perfect addition to an active family that loves to play and go on walks. I bet he would love having a doggy playmate too! ",
-            "description": "Необов'язкове за замовчуанням ''"
+            "example": "Rich would be the perfect addition to an active family that loves to play and go on walks. I bet he would love having a doggy playmate too! "
           }
         }
       },
@@ -1406,13 +1287,12 @@
           "title": {
             "type": "string",
             "minLength": 4,
-            "maxLength": 32,
-            "description": "Min 4 макс 32 літери, обов'язкове для  sell, lost-found, for-free"
+            "maxLength": 32
           },
           "age": {
             "type": "string",
             "example": "1 year",
-            "description": "Готовий вирахуваний вік pets-а"
+            "description": "Ready calculated age for pet"
           },
           "file": {
             "type": "string",
@@ -1427,15 +1307,13 @@
             "type": "string",
             "minLength": 2,
             "pattern": "^[a-zA-Z]+$",
-            "example": "Kyiv",
-            "description": "Лише літери, без цифер та без пробілу мін 2"
+            "example": "Kyiv"
           },
           "comments": {
             "type": "string",
             "maxLength": 140,
             "default": "",
-            "example": "Rich would be the perfect addition to an active family that loves to play and go on walks. I bet he would love having a doggy playmate too! ",
-            "description": "Необов'язкове за замовчуанням ''"
+            "example": "Rich would be the perfect addition to an active family that loves to play and go on walks. I bet he would love having a doggy playmate too! "
           },
           "owner": {
             "$ref": "#/components/responses/UserResponse"
@@ -1460,70 +1338,48 @@
         "items": {
           "type": "object",
           "properties": {
+            "imgUrl": {
+              "type": "string",
+              "example": "https://www.nytimes.com/images/2023/04/16/magazine/16mag-LOR/16mag-LOR-blog480.jpg"
+            },
             "title": {
               "type": "string",
-              "nullable": true,
-              "example": "Притулок для бездомних тварин 'Сіріус'"
+              "example": "What I Learned Dogsitting for New York City’s Opulent Elite"
             },
+            "text": {
+              "type": "string",
+              "example": "In a city of yawning class inequality, some side hustles let you glimpse how the other half lives."
+            },
+            "date": { "type": "string", "example": "2023-04-11T09:00:18+0000" },
             "url": {
               "type": "string",
-              "nullable": true,
-              "example": "https://dogcat.com.ua"
+              "example": "https://www.nytimes.com/2023/04/11/magazine/dogsitting-rich-new-york.html"
             },
-            "addressUrl": {
+            "id": {
               "type": "string",
-              "nullable": true,
-              "example": "https://goo.gl/maps/iq8NXEUf31EAQCzc6"
-            },
-            "imageUrl": {
-              "type": "string",
-              "nullable": true,
-              "example": "https://storage.googleapis.com/kidslikev2_bucket/pets-support/images/sponsors/frame_287.png"
-            },
-            "address": {
-              "type": "string",
-              "nullable": true,
-              "example": "Fedorivka, Kyiv Oblast, Ukraine, 07372"
-            },
-            "workDays": {
-              "type": "array",
-              "nullable": true,
-              "items": {
-                "type": "object",
-                "properties": {
-                  "isOpen": {
-                    "type": "boolean",
-                    "nullable": true,
-                    "example": false
-                  },
-                  "from": {
-                    "type": "string",
-                    "nullable": true,
-                    "example": "11:00"
-                  },
-                  "to": {
-                    "type": "string",
-                    "nullable": true,
-                    "example": "16:00"
-                  }
+              "example": "nyt://article/8d29f1fc-d146-509d-8ceb-5a5b17d7886b"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Request body, or params is invalid"
                 }
               }
-            },
-            "phone": {
-              "type": "string",
-              "nullable": true,
-              "example": "+380931934069"
-            },
-            "email": {
-              "type": "string",
-              "nullable": true,
-              "example": null
             }
           }
         }
       },
       "NotAuthorized": {
-        "description": "Неавторизований користувач (JWT token відсутній)",
+        "description": "Unauthorized user (JWT token missing)",
         "content": {
           "application/json": {
             "schema": {
@@ -1539,7 +1395,7 @@
         }
       },
       "ServerError": {
-        "description": "Помилка сервера",
+        "description": "Server error",
         "content": {
           "application/json": {
             "schema": {
