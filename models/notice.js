@@ -6,7 +6,6 @@ const { User } = require("./user")
 const {
   noticeCategories,
   noticeSexes,
-  dateRegex,
   onlyLettersRegex,
   cityRegex,
   dateFilterOptions,
@@ -253,7 +252,7 @@ const paramsNoticeSecondSchema = Joi.object({
     "number.base": "The limit must be a number.",
     "number.min": "The limit must be not less than 0.",
     "number.max": "The limit must be not greater than 36.",
-  }) ,
+  }),
   sex: Joi.string()
     .valid(...Object.values(noticeSexes))
     .messages({

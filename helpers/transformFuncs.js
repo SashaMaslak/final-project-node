@@ -1,10 +1,7 @@
+const moment = require("moment")
+
 const format = dateStr => {
-  const date = new Date(dateStr)
-  const day = String(date.getDate()).padStart(2, "0")
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const year = date.getFullYear()
-  const result = `${day}-${month}-${year}`
-  return result
+  return moment(new Date(dateStr)).format("DD.MM.yyyy")
 }
 
 const calcAge = dateStr => {
@@ -116,4 +113,5 @@ module.exports = {
   transformNotice,
   transformNoticeExtended,
   transformUser,
+  format,
 }

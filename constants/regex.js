@@ -1,4 +1,4 @@
-const dateRegex = /^\d{2}-\d{2}-\d{4}$/
+const dateRegex = /^\d{2}.\d{2}.\d{4}$/
 
 const onlyLettersRegex = /^[a-zA-Z ]+$/
 

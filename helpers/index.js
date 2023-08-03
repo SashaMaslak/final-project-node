@@ -9,6 +9,7 @@ const {
   transformNotice,
   transformNoticeExtended,
   transformUser,
+  format,
 } = require("./transformFuncs")
 const getEnv = require("./getEnv")
 const extractPublicId = require("./extractPublicId")
@@ -24,6 +25,7 @@ module.exports = {
   transformNotice,
   transformNoticeExtended,
   transformUser,
+  format,
   getEnv,
   extractPublicId,
 }
