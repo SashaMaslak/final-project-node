@@ -34,7 +34,12 @@ const getAll = async (req, res) => {
     date = "",
     query = "",
   } = req.query
-  const findObject = objForSearch({ category, sex, date, query })
+  const findObject = objForSearch({
+    category,
+    sex,
+    date,
+    query,
+  })
   const skip = (page - 1) * limit
   const result = await Notice.find(findObject, "", { skip, limit })
   const totalResult = await Notice.countDocuments(findObject)
