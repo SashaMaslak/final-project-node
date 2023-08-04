@@ -66,7 +66,7 @@ const googleRedirect = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
   await User.findByIdAndUpdate(user._id, { token })
 
-  res.redirect(`${BASE_URL_FRONTEND}/notices?token=${token}`)
+  res.redirect(`${BASE_URL_FRONTEND}/notices/sell?token=${token}`)
 }
 
 module.exports = {
