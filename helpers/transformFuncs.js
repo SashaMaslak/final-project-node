@@ -5,37 +5,25 @@ const format = dateStr => {
 }
 
 const calcAge = dateStr => {
-  const date = new Date(dateStr)
-  const today = new Date()
+  const years = moment().diff(dateStr, "years")
+  const months = moment().diff(dateStr, "months")
+  const days = moment().diff(dateStr, "days")
 
-  let yearDiff = today.getFullYear() - date.getFullYear()
-  let monthDiff = today.getMonth() - date.getMonth()
-  let dayDiff = today.getDate() - date.getDate()
-
-  if (yearDiff === 0 && monthDiff === 0 && dayDiff === 0) {
+  if (years === 0 && months === 0 && days === 0) {
     return "today"
   }
 
-  let age
-
-  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-    yearDiff -= 1
-    age = yearDiff === 1 ? "1 year" : `${yearDiff} years`
+  if (years !== 0) {
+    return years === 1 ? "1 year" : `${years} years`
+  }
+  if (months !== 0) {
+    return months === 1 ? "1 month" : `${months} months`
+  }
+  if (days !== 0) {
+    return days === 1 ? "1 day" : `${days} days`
   }
 
-  if (yearDiff === 0) {
-    monthDiff = monthDiff < 0 ? 12 + monthDiff : monthDiff
-    monthDiff = dayDiff < 0 ? monthDiff - 1 : monthDiff
-    age = monthDiff === 1 ? "1 month" : `${monthDiff} months`
-  }
-
-  if (monthDiff === 0) {
-    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0)
-    dayDiff = dayDiff < 0 ? prevMonth.getDate() + dayDiff : dayDiff
-    age = dayDiff === 1 ? "1 day" : `${dayDiff} days`
-  }
-
-  return age
+  return null
 }
 
 const transformMinifiedNotice = obj => {
@@ -111,5 +99,4 @@ module.exports = {
   transformNotice,
   transformNoticeExtended,
   transformUser,
-  format,
 }
