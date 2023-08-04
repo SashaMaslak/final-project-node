@@ -8,7 +8,7 @@ const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
 const pswRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,16})/
 
-const phoneRegex = /^\+\d{12}$/
+const phoneRegex = /^\+\d{11,12}$/
 
 module.exports = {
   dateRegex,
