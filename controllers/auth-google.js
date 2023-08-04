@@ -22,9 +22,9 @@ const googleAuth = async (req, res) => {
     access_type: "offline",
     prompt: "consent",
   })
-  res.redirect(
-    `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`
-  )
+  res.json({
+    redirectUrl: `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`,
+  })
 }
 
 const googleRedirect = async (req, res) => {
