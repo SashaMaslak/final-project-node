@@ -31,13 +31,17 @@ const getAll = async (req, res) => {
     limit = 12,
     category = "sell",
     sex = "",
-    date = "",
+    dateone = "false",
+    datetwo = "false",
+    datethree = "false",
     query = "",
   } = req.query
 
+  const date = { dateone, datetwo, datethree }
   const findObject = objForSearch({ category, sex, date, query })
-  const skip = (page - 1) * limit
+  console.log(findObject)
   const sort = { createdAt: -1 }
+  const skip = (page - 1) * limit
 
   const totalResult = await Notice.countDocuments(findObject)
   const pages = Math.ceil(totalResult / limit)
@@ -62,11 +66,20 @@ const getMyPets = async (req, res) => {
 }
 
 const getFavoriteAds = async (req, res) => {
-  const { page = 1, limit = 12, sex = "", date = "", query = "" } = req.query
+  const {
+    page = 1,
+    limit = 12,
+    sex = "",
+    dateone = "false",
+    datetwo = "false",
+    datethree = "false",
+    query = "",
+  } = req.query
 
+  const date = { dateone, datetwo, datethree }
   const findObject = objForSearch({ sex, date, query })
-  const skip = (page - 1) * limit
   const sort = { "favorites._id": -1 }
+  const skip = (page - 1) * limit
 
   const totalResult = req.user.favorites.length
   const pages = Math.ceil(totalResult / limit)
@@ -85,11 +98,20 @@ const getFavoriteAds = async (req, res) => {
 
 const getMyAds = async (req, res) => {
   const { _id: owner } = req.user
-  const { page = 1, limit = 12, sex = "", date = "", query = "" } = req.query
+  const {
+    page = 1,
+    limit = 12,
+    sex = "",
+    dateone = "false",
+    datetwo = "false",
+    datethree = "false",
+    query = "",
+  } = req.query
 
+  const date = { dateone, datetwo, datethree }
   const findObject = objForSearch({ sex, date, query })
-  const skip = (page - 1) * limit
   const sort = { createdAt: -1 }
+  const skip = (page - 1) * limit
 
   const totalResult = await Notice.countDocuments({ owner })
   const pages = Math.ceil(totalResult / limit)

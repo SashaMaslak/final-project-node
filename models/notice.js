@@ -8,7 +8,6 @@ const {
   noticeSexes,
   onlyLettersRegex,
   cityRegex,
-  dateFilterOptions,
 } = require("../constants")
 const { SELL, LOSTFOUND, FORFREE, MYPET } = noticeCategories
 
@@ -231,12 +230,15 @@ const paramsNoticeSchema = Joi.object({
       "string.base": "The category must be a string.",
       "any.only": "The category must be one of: male, female",
     }),
-  date: Joi.string()
-    .valid(...Object.values(dateFilterOptions))
-    .messages({
-      "string.base": "The category must be a string.",
-      "any.only": "The category must be one of: 3-12m, 1y, 2y",
-    }),
+  dateone: Joi.string().messages({
+    "string.base": "The category must be a string.",
+  }),
+  datetwo: Joi.string().messages({
+    "string.base": "The category must be a string.",
+  }),
+  datethree: Joi.string().messages({
+    "string.base": "The category must be a string.",
+  }),
   query: Joi.string().max(32).messages({
     "string.base": "The query must be a string.",
     "string.max": "The query must be not greater than 32 symbols.",
@@ -259,12 +261,15 @@ const paramsNoticeSecondSchema = Joi.object({
       "string.base": "The category must be a string.",
       "any.only": "The category must be one of: male, female",
     }),
-  date: Joi.string()
-    .valid(...Object.values(dateFilterOptions))
-    .messages({
-      "string.base": "The category must be a string.",
-      "any.only": "The category must be one of: 3-12m, 1y, 2y",
-    }),
+  dateone: Joi.string().messages({
+    "string.base": "The category must be a string.",
+  }),
+  datetwo: Joi.string().messages({
+    "string.base": "The category must be a string.",
+  }),
+  datethree: Joi.string().messages({
+    "string.base": "The category must be a string.",
+  }),
   query: Joi.string().max(32).messages({
     "string.base": "The query must be a string.",
     "string.max": "The query must be not greater than 32 symbols.",
