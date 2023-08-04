@@ -137,9 +137,6 @@ const refreshToken = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { _id } = req.user
-  if (req.body.birthday) {
-    req.body.birthday = format(req.body.birthday)
-  }
   const user = await User.findByIdAndUpdate(_id, req.body, {
     new: true,
   })

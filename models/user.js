@@ -134,7 +134,7 @@ const updateSchema = Joi.object({
   }),
   birthday: Joi.string().pattern(dateRegex).messages({
     "string.base": "The birthday must be a string.",
-    "string.pattern.base": "birthday phone must be in format DD.MM.YYYY.",
+    "string.pattern.base": "The birthday phone must be in format DD.MM.YYYY.",
   }),
   city: Joi.string().min(2).pattern(cityRegex).messages({
     "string.base": "The city must be a string.",
