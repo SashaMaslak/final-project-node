@@ -1,5 +1,3 @@
-const { login } = require("../controllers/auth")
-
 const today = new Date()
 
 const threeMonthAgo = new Date(
