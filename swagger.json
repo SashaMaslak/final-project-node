@@ -281,16 +281,7 @@
       "get": {
         "tags": ["User"],
         "description": "Mail Confirmation (Public)",
-        "parameters": [
-          {
-            "name": "verificationToken",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [{ "$ref": "#/components/parameters/verifToken" }],
         "responses": {
           "200": {
             "description": "Success, mail confirmed",
@@ -410,7 +401,20 @@
         "description": "Project and user identification through google auth (Public)",
         "responses": {
           "302": {
-            "description": "Redirected to https://accounts.google.com/o/oauth2/v2/auth ..."
+            "description": "Response with redirectUrl, page for choosing user account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "redirectUrl": {
+                      "type": "string",
+                      "example": "`https://accounts.google.com/o/oauth2/v2/auth ?...stringifiedParams"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
@@ -424,7 +428,7 @@
         "description": "Receiving user data and forwarding it to the frontend (technical enpoint for google DON'T USE) (Public)",
         "responses": {
           "302": {
-            "description": "Redirected to Frontend with options ? email = and name = ..."
+            "description": "Redirected to Frontend (/notices/sell) with options ?token=..."
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
@@ -438,7 +442,9 @@
         "description": "Get 12 with Pagination with Filters and Pio Search (Public)",
         "parameters": [
           { "$ref": "#/components/parameters/category" },
-          { "$ref": "#/components/parameters/date" },
+          { "$ref": "#/components/parameters/dateone" },
+          { "$ref": "#/components/parameters/datetwo" },
+          { "$ref": "#/components/parameters/datethree" },
           { "$ref": "#/components/parameters/sex" },
           { "$ref": "#/components/parameters/query" },
           { "$ref": "#/components/parameters/page" },
@@ -556,6 +562,11 @@
         "security": [{ "Bearer": [] }],
         "description": "Get an array of favorite pets (added to favorite) (Private)",
         "parameters": [
+          { "$ref": "#/components/parameters/dateone" },
+          { "$ref": "#/components/parameters/datetwo" },
+          { "$ref": "#/components/parameters/datethree" },
+          { "$ref": "#/components/parameters/sex" },
+          { "$ref": "#/components/parameters/query" },
           { "$ref": "#/components/parameters/page" },
           { "$ref": "#/components/parameters/limit" }
         ],
@@ -600,6 +611,11 @@
           "200": {
             "description": "Success, the array of all your publications has been received",
             "parameters": [
+              { "$ref": "#/components/parameters/dateone" },
+              { "$ref": "#/components/parameters/datetwo" },
+              { "$ref": "#/components/parameters/datethree" },
+              { "$ref": "#/components/parameters/sex" },
+              { "$ref": "#/components/parameters/query" },
               { "$ref": "#/components/parameters/page" },
               { "$ref": "#/components/parameters/limit" }
             ],
@@ -636,16 +652,7 @@
       "get": {
         "tags": ["Notice"],
         "description": "Get one notice by id (Public)",
-        "parameters": [
-          {
-            "name": "noticeId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [{ "$ref": "#/components/parameters/noticeId" }],
         "responses": {
           "200": {
             "description": "Success, received one notice",
@@ -655,7 +662,7 @@
                   "type": "object",
                   "properties": {
                     "notice": {
-                      "$ref": "#/components/responses/NoticeMinifyExtended"
+                      "$ref": "#/components/responses/NoticeExtendedResponse"
                     }
                   }
                 }
@@ -690,16 +697,7 @@
         "tags": ["Notice"],
         "security": [{ "Bearer": [] }],
         "description": "Delete notice (Private)",
-        "parameters": [
-          {
-            "name": "noticeId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [{ "$ref": "#/components/parameters/noticeId" }],
         "responses": {
           "200": {
             "description": "Success, deleted",
@@ -708,10 +706,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Delete successfully"
-                    }
+                    "notice": { "$ref": "#/components/responses/UserResponse" }
                   }
                 }
               }
@@ -763,16 +758,7 @@
         "tags": ["Notice"],
         "security": [{ "Bearer": [] }],
         "description": "Toggle to add/remove a user from the favorites array (Private)",
-        "parameters": [
-          {
-            "name": "noticeId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [{ "$ref": "#/components/parameters/noticeId" }],
         "responses": {
           "200": {
             "description": "Success, added / removed notice from favorites array",
@@ -1066,21 +1052,52 @@
     },
 
     "parameters": {
+      "noticeId": {
+        "name": "noticeId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "64bccc6f1ab4316641be2221"
+        }
+      },
+      "verifToken": {
+        "name": "verificationToken",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
       "category": {
         "name": "category",
         "in": "query",
         "type": "string",
         "enum": ["sell", "lost-found", "for-free"],
         "example": "sell",
+        "default": "sell",
         "description": "To choose pets by category one of 'sell', 'lost-found', 'for-free'"
       },
-      "date": {
-        "name": "date",
+      "dateone": {
+        "name": "dateone",
         "in": "query",
         "type": "string",
-        "enum": ["3-12m", "1y", "2y"],
-        "example": "3-12m",
-        "description": "For a date filter, one of '3-12m', '1y', '2y'"
+        "example": "1",
+        "description": "For a date filter, stand for '3-12m', any value besides false or empty"
+      },
+      "datetwo": {
+        "name": "datetwo",
+        "in": "query",
+        "type": "string",
+        "example": "1",
+        "description": "For a date filter, stand for '1y', any value besides false or empty"
+      },
+      "datethree": {
+        "name": "datethree",
+        "in": "query",
+        "type": "string",
+        "example": "1",
+        "description": "For a date filter, stand for '2y', any value besides false or empty"
       },
       "sex": {
         "name": "sex",
@@ -1269,7 +1286,7 @@
           }
         }
       },
-      "NoticeMinifyExtended": {
+      "NoticeExtendedResponse": {
         "type": "object",
         "properties": {
           "id": {

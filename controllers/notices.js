@@ -113,7 +113,7 @@ const getMyAds = async (req, res) => {
   const sort = { createdAt: -1 }
   const skip = (page - 1) * limit
 
-  const totalResult = await Notice.countDocuments({ owner })
+  const totalResult = await Notice.countDocuments({ ...findObject, owner })
   const pages = Math.ceil(totalResult / limit)
 
   const result = await Notice.find({ ...findObject, owner })
